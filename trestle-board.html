@@ -800,10 +800,38 @@
                 <h3 class="education-title">🎂 Birthday Celebrations</h3>
                 <div class="education-content">
                     <p>Wishing a Happy Birthday to our brothers celebrating this month:</p>
-                    <p style="margin-top: 15px;"><strong>January:</strong> [Brother Names and Dates]</p>
-                    <p><strong>February:</strong> [Brother Names and Dates]</p>
+                    <div id="birthday-list" style="margin-top: 15px;">
+                        <p style="color: var(--navy-light); font-style: italic;">Loading birthdays...</p>
+                    </div>
                 </div>
             </div>
+            
+            <script>
+                // Auto-load birthdays from database
+                (async function loadBirthdays() {
+                    const API_URL = 'https://script.google.com/macros/s/AKfycbx427mzlIHjKzX_IHbaOEnZlBESWVnHCcWXO16cLF97C3VOjc9OhvfZGMEkRvpZeVr7/exec';
+                    try {
+                        const response = await fetch(API_URL + '?action=getBirthdays');
+                        const data = await response.json();
+                        const container = document.getElementById('birthday-list');
+                        
+                        if (data.success && data.birthdays.length > 0) {
+                            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                                              'July', 'August', 'September', 'October', 'November', 'December'];
+                            const currentMonth = monthNames[new Date().getMonth()];
+                            
+                            let html = '<p><strong>' + currentMonth + ':</strong> ';
+                            html += data.birthdays.map(b => b.name + ' (' + b.birthday + ')').join(', ');
+                            html += '</p>';
+                            container.innerHTML = html;
+                        } else {
+                            container.innerHTML = '<p style="color: var(--navy-light); font-style: italic;">No birthdays this month</p>';
+                        }
+                    } catch (error) {
+                        document.getElementById('birthday-list').innerHTML = '<p style="color: var(--navy-light); font-style: italic;">Could not load birthdays</p>';
+                    }
+                })();
+            </script>
         </section>
 
         <!-- PAGE 5: SISTER CHAPTERS -->

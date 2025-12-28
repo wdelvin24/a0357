@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-In QR Code | Alpha Omega Lodge No. 357</title>
+    <script>
+        // Admin auth check
+        if (sessionStorage.getItem('ao357_auth') !== 'admin') {
+            window.location.href = 'index.html';
+        }
+        
+        // Session timeout check
+        const TIMEOUT_MS = 30 * 60 * 1000;
+        const lastActivity = sessionStorage.getItem('ao357_lastActivity');
+        if (lastActivity && (Date.now() - parseInt(lastActivity)) > TIMEOUT_MS) {
+            sessionStorage.removeItem('ao357_auth');
+            sessionStorage.removeItem('ao357_lastActivity');
+            alert('Your session has expired due to inactivity. Please log in again.');
+            window.location.href = 'index.html';
+        }
+        sessionStorage.setItem('ao357_lastActivity', Date.now().toString());
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --navy-dark: #0a1628;
+            --navy-primary: #1a3a5c;
+            --turquoise-primary: #3ba5b5;
+            --turquoise-light: #5ec4d4;
+            --gold-accent: #d4a84b;
+            --cream: #f5f1e8;
+            --white: #ffffff;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--navy-dark);
+            min-height: 100vh;
+            color: var(--cream);
+        }
+        
+        .top-bar {
+            background: var(--navy-dark);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--turquoise-primary);
+        }
+        
+        .top-bar a {
+            color: var(--turquoise-light);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+        
+        .top-bar button {
+            padding: 6px 14px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            background: transparent;
+            border: 1px solid var(--turquoise-primary);
+            color: var(--turquoise-light);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            color: var(--gold-accent);
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: var(--turquoise-light);
+            margin-bottom: 30px;
+        }
+        
+        /* QR Display Box */
+        .qr-display {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 40px;
+            display: inline-block;
+            margin-bottom: 25px;
+        }
+        
+        #qrcode {
+            display: flex;
+            justify-content: center;
+        }
+        
+        #qrcode img {
+            border-radius: 10px;
+        }
+        
+        /* Today's Code */
+        .code-display {
+            background: linear-gradient(135deg, var(--gold-accent), #c49a3d);
+            color: var(--navy-dark);
+            padding: 20px 40px;
+            border-radius: 12px;
+            display: inline-block;
+            margin-bottom: 25px;
+        }
+        
+        .code-display p {
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+        
+        .code-display .code {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Date */
+        .date-display {
+            color: var(--turquoise-light);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        
+        /* Buttons */
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: var(--turquoise-primary);
+            color: var(--white);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--turquoise-primary);
+            color: var(--turquoise-light);
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        /* Fullscreen Mode */
+        .fullscreen-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--navy-dark);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .fullscreen-mode.active {
+            display: flex;
+        }
+        
+        .fullscreen-mode h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            color: var(--gold-accent);
+            margin-bottom: 20px;
+        }
+        
+        .fullscreen-mode .qr-display {
+            padding: 50px;
+            margin-bottom: 30px;
+        }
+        
+        .fullscreen-mode .code-display {
+            padding: 25px 50px;
+        }
+        
+        .fullscreen-mode .code-display .code {
+            font-size: 3rem;
+        }
+        
+        .fullscreen-mode .exit-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: var(--cream);
+            font-size: 1.5rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .fullscreen-mode .instructions {
+            color: var(--turquoise-light);
+            font-size: 1.2rem;
+            margin-top: 30px;
+        }
+        
+        /* Attendance List */
+        .attendance-section {
+            margin-top: 40px;
+            text-align: left;
+            background: rgba(26, 58, 92, 0.5);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid var(--turquoise-primary);
+        }
+        
+        .attendance-section h3 {
+            color: var(--gold-accent);
+            font-family: 'Cinzel', serif;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .attendance-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .attendance-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--navy-primary);
+        }
+        
+        .attendance-item:last-child {
+            border-bottom: none;
+        }
+        
+        .attendance-count {
+            text-align: center;
+            color: var(--turquoise-light);
+            font-size: 0.9rem;
+            margin-top: 15px;
+        }
+        
+        .no-attendance {
+            text-align: center;
+            color: var(--turquoise-light);
+            font-style: italic;
+        }
+        
+        /* Status Section */
+        .status-section {
+            background: rgba(26, 58, 92, 0.5);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 25px;
+            border: 1px solid var(--turquoise-primary);
+            text-align: center;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #888;
+        }
+        
+        .status-dot.open {
+            background: #28a745;
+            box-shadow: 0 0 10px #28a745;
+        }
+        
+        .status-dot.closed {
+            background: #dc3545;
+        }
+        
+        .override-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .btn-open {
+            background: #28a745;
+            color: white;
+            padding: 12px 25px;
+        }
+        
+        .btn-close {
+            background: #dc3545;
+            color: white;
+            padding: 12px 25px;
+        }
+        
+        .duration-select {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--turquoise-light);
+        }
+        
+        .duration-select select {
+            padding: 8px 12px;
+            border-radius: 6px;
+            background: var(--navy-dark);
+            color: var(--cream);
+            border: 1px solid var(--turquoise-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <a href="index.html">← Back to Portal</a>
+        <button onclick="logout()">Log Out</button>
+    </div>
+    
+    <div class="container">
+        <h1>📱 Meeting Check-In QR</h1>
+        <p class="subtitle">Display this at the Tyler's door for brothers to scan</p>
+        
+        <p class="date-display" id="currentDate"></p>
+        
+        <div class="qr-display">
+            <div id="qrcode"></div>
+        </div>
+        
+        <div class="code-display">
+            <p>Today's Code:</p>
+            <div class="code" id="todayCode"></div>
+        </div>
+        
+        <div class="btn-group">
+            <button class="btn btn-primary" onclick="enterFullscreen()">📺 Display Full Screen</button>
+            <button class="btn btn-secondary" onclick="downloadQR()">⬇️ Download QR</button>
+            <button class="btn btn-secondary" onclick="refreshAttendance()">🔄 Refresh</button>
+        </div>
+        
+        <!-- Check-In Status & Override -->
+        <div class="status-section" id="statusSection">
+            <div class="status-indicator" id="statusIndicator">
+                <span class="status-dot" id="statusDot"></span>
+                <span id="statusText">Checking status...</span>
+            </div>
+            
+            <div class="override-controls" id="overrideControls">
+                <button class="btn btn-open" id="openBtn" onclick="openCheckIn()">🔓 Open Check-In (Special Meeting)</button>
+                <button class="btn btn-close" id="closeBtn" onclick="closeCheckIn()" style="display: none;">🔒 Close Check-In</button>
+                
+                <div class="duration-select" id="durationSelect">
+                    <label>Duration:</label>
+                    <select id="hours">
+                        <option value="2">2 hours</option>
+                        <option value="3">3 hours</option>
+                        <option value="4" selected>4 hours</option>
+                        <option value="5">5 hours</option>
+                        <option value="6">6 hours</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="attendance-section">
+            <h3>Today's Attendance</h3>
+            <div class="attendance-list" id="attendanceList">
+                <p class="no-attendance">Loading...</p>
+            </div>
+            <p class="attendance-count" id="attendanceCount"></p>
+        </div>
+    </div>
+    
+    <!-- Fullscreen Mode -->
+    <div class="fullscreen-mode" id="fullscreenMode">
+        <button class="exit-btn" onclick="exitFullscreen()">✕</button>
+        <h2>Alpha Omega Lodge No. 357</h2>
+        <div class="qr-display">
+            <div id="qrcode-fullscreen"></div>
+        </div>
+        <div class="code-display">
+            <p>Enter this code after scanning:</p>
+            <div class="code" id="todayCode-fullscreen"></div>
+        </div>
+        <p class="instructions">Scan with your phone camera to check in</p>
+    </div>
+    
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbx427mzlIHjKzX_IHbaOEnZlBESWVnHCcWXO16cLF97C3VOjc9OhvfZGMEkRvpZeVr7/exec';
+        const SITE_URL = 'https://wdelvin24.github.io/checkin.html';
+        
+        // Generate today's code
+        function generateTodayCode() {
+            const today = new Date();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+            const year = String(today.getFullYear()).slice(-2);
+            return 'AO357-' + month + day + year;
+        }
+        
+        // Format today's date
+        function formatDate() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date().toLocaleDateString('en-US', options);
+        }
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            const todayCode = generateTodayCode();
+            
+            // Display date and code
+            document.getElementById('currentDate').textContent = formatDate();
+            document.getElementById('todayCode').textContent = todayCode;
+            document.getElementById('todayCode-fullscreen').textContent = todayCode;
+            
+            // Generate QR codes
+            new QRCode(document.getElementById('qrcode'), {
+                text: SITE_URL,
+                width: 200,
+                height: 200,
+                colorDark: '#1a3a5c',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            new QRCode(document.getElementById('qrcode-fullscreen'), {
+                text: SITE_URL,
+                width: 300,
+                height: 300,
+                colorDark: '#1a3a5c',
+                colorLight: '#ffffff',
+                correctLevel: QRCode.CorrectLevel.H
+            });
+            
+            // Load attendance
+            loadAttendance();
+            
+            // Load check-in status
+            loadCheckInStatus();
+        });
+        
+        async function loadCheckInStatus() {
+            try {
+                const response = await fetch(API_URL + '?action=checkInStatus');
+                const data = await response.json();
+                
+                const dot = document.getElementById('statusDot');
+                const text = document.getElementById('statusText');
+                const openBtn = document.getElementById('openBtn');
+                const closeBtn = document.getElementById('closeBtn');
+                const durationSelect = document.getElementById('durationSelect');
+                
+                if (data.isOpen) {
+                    dot.className = 'status-dot open';
+                    text.textContent = data.message;
+                    openBtn.style.display = 'none';
+                    closeBtn.style.display = 'inline-block';
+                    durationSelect.style.display = 'none';
+                } else {
+                    dot.className = 'status-dot closed';
+                    text.textContent = data.message;
+                    openBtn.style.display = 'inline-block';
+                    closeBtn.style.display = 'none';
+                    durationSelect.style.display = 'flex';
+                }
+            } catch (error) {
+                console.error('Error loading status:', error);
+            }
+        }
+        
+        async function openCheckIn() {
+            const hours = document.getElementById('hours').value;
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'openCheckIn',
+                        hours: parseInt(hours)
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(data.message);
+                    loadCheckInStatus();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error connecting to server');
+            }
+        }
+        
+        async function closeCheckIn() {
+            if (!confirm('Are you sure you want to close check-in?')) return;
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'closeCheckIn'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Check-in closed');
+                    loadCheckInStatus();
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                alert('Error connecting to server');
+            }
+        }
+        
+        async function loadAttendance() {
+            try {
+                const today = new Date().toLocaleDateString();
+                const response = await fetch(API_URL + '?action=getAttendance&date=' + encodeURIComponent(today));
+                const data = await response.json();
+                
+                const list = document.getElementById('attendanceList');
+                
+                if (data.success && data.attendance.length > 0) {
+                    list.innerHTML = data.attendance.map(a => `
+                        <div class="attendance-item">
+                            <span>${a.name}</span>
+                            <span style="color: var(--turquoise-light);">${a.time}</span>
+                        </div>
+                    `).join('');
+                    
+                    document.getElementById('attendanceCount').textContent = 
+                        `Total: ${data.attendance.length} brother${data.attendance.length !== 1 ? 's' : ''} checked in`;
+                } else {
+                    list.innerHTML = '<p class="no-attendance">No check-ins yet today</p>';
+                    document.getElementById('attendanceCount').textContent = '';
+                }
+            } catch (error) {
+                console.error('Error loading attendance:', error);
+                document.getElementById('attendanceList').innerHTML = 
+                    '<p class="no-attendance">Error loading attendance</p>';
+            }
+        }
+        
+        function refreshAttendance() {
+            document.getElementById('attendanceList').innerHTML = '<p class="no-attendance">Loading...</p>';
+            loadAttendance();
+        }
+        
+        function enterFullscreen() {
+            document.getElementById('fullscreenMode').classList.add('active');
+            
+            // Try actual fullscreen
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            }
+        }
+        
+        function exitFullscreen() {
+            document.getElementById('fullscreenMode').classList.remove('active');
+            
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(() => {});
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            }
+        }
+        
+        function downloadQR() {
+            const canvas = document.querySelector('#qrcode canvas');
+            if (canvas) {
+                const link = document.createElement('a');
+                link.download = 'ao357-checkin-qr-' + generateTodayCode() + '.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }
+        }
+        
+        // Exit fullscreen on Escape
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                exitFullscreen();
+            }
+        });
+        
+        function logout() {
+            sessionStorage.removeItem('ao357_auth');
+            sessionStorage.removeItem('ao357_lastActivity');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
