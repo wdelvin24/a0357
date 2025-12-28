@@ -361,6 +361,7 @@
                         <p><span>Birthday:</span> <span id="profile-birthday">-</span></p>
                         <p><span>Email:</span> <span id="profile-email">-</span></p>
                         <p><span>Phone:</span> <span id="profile-phone">-</span></p>
+                        <p><span>Year Raised:</span> <span id="profile-raised">-</span></p>
                     </div>
                 </div>
                 <button class="btn btn-secondary" onclick="showEditForm()">Edit Profile</button>
@@ -389,6 +390,11 @@
                 <div class="form-group">
                     <label>Phone (optional)</label>
                     <input type="tel" id="member-phone" placeholder="(305) 555-1234">
+                </div>
+                
+                <div class="form-group">
+                    <label>Year Raised (optional)</label>
+                    <input type="text" id="member-raised" placeholder="2015" maxlength="4">
                 </div>
                 
                 <button class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
@@ -528,6 +534,7 @@
             const birthday = document.getElementById('member-birthday').value.trim();
             const email = document.getElementById('member-email').value.trim();
             const phone = document.getElementById('member-phone').value.trim();
+            const yearRaised = document.getElementById('member-raised').value.trim();
             
             if (!name || !birthday) {
                 showMessage('Name and Birthday are required', 'error');
@@ -540,6 +547,12 @@
                 return;
             }
             
+            // Validate year raised if provided
+            if (yearRaised && !/^\d{4}$/.test(yearRaised)) {
+                showMessage('Year Raised must be a 4-digit year', 'error');
+                return;
+            }
+            
             try {
                 const action = currentMember ? 'updateMember' : 'addMember';
                 const payload = {
@@ -547,7 +560,8 @@
                     name: name,
                     birthday: birthday,
                     email: email,
-                    phone: phone
+                    phone: phone,
+                    yearRaised: yearRaised
                 };
                 
                 if (currentMember) {
@@ -574,7 +588,8 @@
                         name: name,
                         birthday: birthday,
                         email: email,
-                        phone: phone
+                        phone: phone,
+                        yearRaised: yearRaised
                     };
                     
                     setTimeout(() => {
@@ -595,6 +610,7 @@
             document.getElementById('profile-birthday').textContent = formatBirthday(currentMember.birthday) || '-';
             document.getElementById('profile-email').textContent = currentMember.email || '-';
             document.getElementById('profile-phone').textContent = currentMember.phone || '-';
+            document.getElementById('profile-raised').textContent = currentMember.yearRaised || '-';
             
             document.getElementById('profile-view').style.display = 'block';
             document.getElementById('profile-form').style.display = 'none';
@@ -626,9 +642,10 @@
         function showEditForm() {
             document.getElementById('form-title').textContent = 'Edit Your Profile';
             document.getElementById('member-name').value = currentMember.name || '';
-            document.getElementById('member-birthday').value = currentMember.birthday || '';
+            document.getElementById('member-birthday').value = formatBirthday(currentMember.birthday) || '';
             document.getElementById('member-email').value = currentMember.email || '';
             document.getElementById('member-phone').value = currentMember.phone || '';
+            document.getElementById('member-raised').value = currentMember.yearRaised || '';
             
             document.getElementById('profile-view').style.display = 'none';
             document.getElementById('profile-form').style.display = 'block';
