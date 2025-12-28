@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alpha Omega Lodge No. 357 | Members Portal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy-dark: #0a1628;
+            --navy: #1a3a5c;
+            --navy-light: #2d5a87;
+            --turquoise-dark: #1a6b7a;
+            --turquoise: #3ba5b5;
+            --turquoise-light: #5ec4d4;
+            --gold: #d4a84b;
+            --gold-light: #e8c87a;
+            --cream: #f5f1e8;
+            --white: #ffffff;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%);
+            min-height: 100vh;
+            color: var(--cream);
+        }
+        
+        /* LOGIN SCREEN */
+        #login-screen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .login-box {
+            background: rgba(26, 58, 92, 0.8);
+            border: 1px solid var(--turquoise);
+            border-radius: 16px;
+            padding: 50px 40px;
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .login-logo {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 25px;
+            border: 3px solid var(--gold);
+        }
+        
+        .login-box h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: var(--white);
+            margin-bottom: 8px;
+        }
+        
+        .login-box .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            color: var(--turquoise-light);
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+        
+        .login-box label {
+            display: block;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            color: var(--gold);
+            margin-bottom: 10px;
+            text-align: left;
+        }
+        
+        .login-box input {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 1rem;
+            border: 1px solid var(--turquoise-dark);
+            border-radius: 8px;
+            background: rgba(10, 22, 40, 0.8);
+            color: var(--white);
+            margin-bottom: 20px;
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        .login-box input:focus {
+            outline: none;
+            border-color: var(--turquoise);
+        }
+        
+        .login-box input::placeholder {
+            color: rgba(245, 241, 232, 0.4);
+        }
+        
+        .login-box button {
+            width: 100%;
+            padding: 14px;
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, var(--gold), var(--gold-light));
+            color: var(--navy-dark);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .login-box button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(212, 168, 75, 0.4);
+        }
+        
+        .error-msg {
+            color: #e74c3c;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .login-footer {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: rgba(245, 241, 232, 0.5);
+        }
+
+        /* MAIN SITE - Hidden until login */
+        #main-site {
+            display: none;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        /* Header */
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            border-bottom: 1px solid rgba(59, 165, 181, 0.3);
+            margin-bottom: 50px;
+        }
+        
+        .header-logo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 25px;
+            border: 3px solid var(--gold);
+        }
+        
+        header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.5rem;
+            color: var(--white);
+            letter-spacing: 3px;
+            margin-bottom: 10px;
+        }
+        
+        header .subtitle {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            color: var(--turquoise-light);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+        
+        .established {
+            font-style: italic;
+            color: var(--gold-light);
+            font-size: 1.1rem;
+        }
+        
+        /* Welcome Section */
+        .welcome {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto 50px;
+            padding: 0 20px;
+        }
+        
+        .welcome h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .welcome p {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--cream);
+        }
+        
+        /* Navigation Cards */
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+        
+        .nav-card {
+            background: linear-gradient(180deg, rgba(26, 58, 92, 0.8) 0%, rgba(10, 22, 40, 0.9) 100%);
+            border: 1px solid rgba(59, 165, 181, 0.3);
+            border-radius: 12px;
+            padding: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: block;
+        }
+        
+        .nav-card:hover {
+            border-color: var(--turquoise);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(59, 165, 181, 0.2);
+        }
+        
+        .nav-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .nav-card h3 {
+            font-family: 'Cinzel', serif;
+            color: var(--white);
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+        
+        .nav-card p {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--turquoise-light);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        
+        .nav-card.featured {
+            border-color: var(--gold);
+            background: linear-gradient(180deg, rgba(212, 168, 75, 0.1) 0%, rgba(10, 22, 40, 0.9) 100%);
+        }
+        
+        .nav-card.featured:hover {
+            border-color: var(--gold-light);
+            box-shadow: 0 10px 40px rgba(212, 168, 75, 0.2);
+        }
+        
+        /* Share Section */
+        .share-section {
+            background: linear-gradient(135deg, rgba(26, 58, 92, 0.6) 0%, rgba(10, 22, 40, 0.8) 100%);
+            border: 1px solid rgba(59, 165, 181, 0.3);
+            border-radius: 12px;
+            padding: 35px;
+            margin-bottom: 60px;
+            text-align: center;
+        }
+        
+        .share-section h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--white);
+            font-size: 1.4rem;
+            margin-bottom: 8px;
+        }
+        
+        .share-subtitle {
+            color: var(--turquoise-light);
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+        
+        .share-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .qr-box {
+            text-align: center;
+        }
+        
+        .qr-image {
+            width: 140px;
+            height: 140px;
+            background: white;
+            border-radius: 10px;
+            padding: 8px;
+        }
+        
+        .qr-label {
+            color: var(--cream);
+            font-size: 0.8rem;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+        
+        .instructions-box {
+            display: flex;
+            gap: 30px;
+            text-align: left;
+        }
+        
+        .device-instructions h3 {
+            color: var(--turquoise-light);
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+        
+        .device-instructions ol {
+            color: var(--cream);
+            font-size: 0.85rem;
+            line-height: 1.8;
+            padding-left: 20px;
+        }
+        
+        .device-instructions strong {
+            color: var(--white);
+        }
+        
+        @media (max-width: 600px) {
+            .share-content {
+                flex-direction: column;
+            }
+            .instructions-box {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+        
+        /* Admin Section */
+        .admin-section {
+            display: none;
+            margin-bottom: 60px;
+        }
+        
+        .admin-section.visible {
+            display: block;
+        }
+        
+        .admin-header {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            color: var(--gold);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(212, 168, 75, 0.3);
+        }
+        
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+        
+        .nav-card.admin {
+            border-color: rgba(212, 168, 75, 0.4);
+            background: linear-gradient(180deg, rgba(212, 168, 75, 0.05) 0%, rgba(10, 22, 40, 0.9) 100%);
+        }
+        
+        .nav-card.admin:hover {
+            border-color: var(--gold);
+            box-shadow: 0 10px 40px rgba(212, 168, 75, 0.15);
+        }
+        
+        /* Officers Section */
+        .officers-section {
+            background: rgba(26, 58, 92, 0.5);
+            border-radius: 12px;
+            padding: 40px;
+            margin-bottom: 50px;
+            border: 1px solid rgba(59, 165, 181, 0.2);
+        }
+        
+        .officers-section h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.5rem;
+        }
+        
+        .officers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .officer {
+            text-align: center;
+            padding: 15px;
+        }
+        
+        .officer .title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            color: var(--turquoise-light);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+        
+        .officer .name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            color: var(--white);
+        }
+        
+        /* Contact Section */
+        .contact-section {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid rgba(59, 165, 181, 0.3);
+        }
+        
+        .contact-section h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+        
+        .contact-info {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            color: var(--cream);
+            line-height: 2;
+        }
+        
+        .contact-info a {
+            color: var(--turquoise-light);
+            text-decoration: none;
+        }
+        
+        .contact-info a:hover {
+            color: var(--turquoise);
+            text-decoration: underline;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 20px;
+        }
+        
+        .motto {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.85rem;
+            color: var(--gold);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+        
+        .copyright {
+            font-size: 0.8rem;
+            color: rgba(245, 241, 232, 0.5);
+        }
+        
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+            background: rgba(10, 22, 40, 0.9);
+            border-bottom: 1px solid rgba(59, 165, 181, 0.2);
+            z-index: 1000;
+        }
+        
+        .user-badge {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            padding: 5px 12px;
+            border-radius: 20px;
+            background: rgba(59, 165, 181, 0.2);
+            color: var(--turquoise-light);
+        }
+        
+        .user-badge.admin-badge {
+            background: rgba(212, 168, 75, 0.2);
+            color: var(--gold);
+        }
+        
+        .logout-btn {
+            padding: 8px 16px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            background: transparent;
+            border: 1px solid var(--turquoise);
+            color: var(--turquoise-light);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: var(--turquoise);
+            color: var(--white);
+        }
+        
+        #main-site .container {
+            margin-top: 60px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8rem;
+                letter-spacing: 1px;
+            }
+            
+            header .subtitle {
+                font-size: 0.75rem;
+                letter-spacing: 2px;
+            }
+            
+            .nav-grid, .admin-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header {
+                padding: 40px 15px;
+            }
+            
+            .login-box {
+                padding: 40px 25px;
+            }
+            
+            .login-logo {
+                width: 120px;
+                height: 120px;
+            }
+            
+            .header-logo {
+                width: 120px;
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOGIN SCREEN -->
+    <div id="login-screen">
+        <div class="login-box">
+            <img src="ao357logo.jpg" alt="Alpha Omega Lodge No. 357" class="login-logo">
+            <h1>Members Portal</h1>
+            <p class="subtitle">Alpha Omega Lodge No. 357</p>
+            
+            <form id="login-form">
+                <label for="password">Enter Lodge Password</label>
+                <input type="password" id="password" placeholder="Password" autocomplete="off">
+                <button type="submit">Enter the Lodge</button>
+            </form>
+            
+            <p class="error-msg" id="error-msg">Incorrect password. Please try again.</p>
+            
+            <p class="login-footer">Contact the Secretary if you need access.</p>
+        </div>
+    </div>
+
+    <!-- MAIN SITE (hidden until correct password) -->
+    <div id="main-site">
+        <div class="top-bar">
+            <span class="user-badge" id="user-badge">Brother</span>
+            <button class="logout-btn" onclick="logout()">Log Out</button>
+        </div>
+        
+        <div class="container">
+            <header>
+                <img src="ao357logo.jpg" alt="Alpha Omega Lodge No. 357" class="header-logo">
+                <h1>Alpha Omega Lodge No. 357</h1>
+                <p class="subtitle">Prince Hall Affiliated • F. & A.M.</p>
+                <p class="established">Miami, Florida • Chartered 1984</p>
+            </header>
+            
+            <section class="welcome">
+                <h2>Welcome, Brother</h2>
+                <p>This members portal provides access to lodge communications, our calendar of events, and important announcements. Stay connected with your brethren.</p>
+            </section>
+            
+            <!-- MAIN NAV - Visible to all brothers -->
+            <nav class="nav-grid">
+                <a href="trestle-board.html" class="nav-card featured">
+                    <div class="icon">📰</div>
+                    <h3>The Trestle Board</h3>
+                    <p>Read the latest lodge newsletter featuring messages from the East, announcements, and community updates.</p>
+                </a>
+                
+                <a href="ao357-calendar.html" class="nav-card featured">
+                    <div class="icon">📅</div>
+                    <h3>Lodge Calendar</h3>
+                    <p>View upcoming stated meetings, degree work, fundraisers, and special events. Subscribe to sync with your phone.</p>
+                </a>
+            </nav>
+            
+            <!-- SHARE & ADD TO HOME SCREEN -->
+            <section class="share-section">
+                <h2>📲 Add to Your Home Screen</h2>
+                <p class="share-subtitle">Access the portal like an app — no download required</p>
+                
+                <div class="share-content">
+                    <div class="qr-box">
+                        <img src="ao357-qr-code.png" alt="QR Code" class="qr-image">
+                        <p class="qr-label">Scan to share with a brother</p>
+                    </div>
+                    
+                    <div class="instructions-box">
+                        <div class="device-instructions">
+                            <h3>🍎 iPhone</h3>
+                            <ol>
+                                <li>Tap the <strong>Share</strong> button ⬆️</li>
+                                <li>Tap <strong>"Add to Home Screen"</strong></li>
+                                <li>Tap <strong>Add</strong></li>
+                            </ol>
+                        </div>
+                        
+                        <div class="device-instructions">
+                            <h3>🤖 Android</h3>
+                            <ol>
+                                <li>Tap the <strong>3 dots</strong> menu ⋮</li>
+                                <li>Tap <strong>"Add to Home Screen"</strong></li>
+                                <li>Tap <strong>Add</strong></li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- ADMIN SECTION - Only visible to admins -->
+            <section class="admin-section" id="admin-section">
+                <p class="admin-header">🔐 Officer Tools</p>
+                <div class="admin-grid">
+                    <a href="site-guide.html" class="nav-card admin">
+                        <div class="icon">📖</div>
+                        <h3>How to Update This Site</h3>
+                        <p>Step-by-step guide for updating the calendar, newsletter, officers, and passwords.</p>
+                    </a>
+                    
+                    <a href="google-calendar-setup-guide.html" class="nav-card admin">
+                        <div class="icon">⚙️</div>
+                        <h3>Calendar Setup Guide</h3>
+                        <p>Instructions for setting up and managing the Google Calendar system.</p>
+                    </a>
+                    
+                    <a href="one-page-handout.html" class="nav-card admin">
+                        <div class="icon">📋</div>
+                        <h3>Digital Initiative</h3>
+                        <p>Overview document for presenting the digital communications system.</p>
+                    </a>
+                    
+                    <a href="ao357-site-backup.zip" download class="nav-card admin">
+                        <div class="icon">💾</div>
+                        <h3>Download Site Files</h3>
+                        <p>Download all website files as a ZIP backup for editing or safekeeping.</p>
+                    </a>
+                </div>
+            </section>
+            
+            <section class="officers-section">
+                <h2>2025 Lodge Officers</h2>
+                <div class="officers-grid">
+                    <div class="officer">
+                        <p class="title">Worshipful Master</p>
+                        <p class="name">[Name]</p>
+                    </div>
+                    <div class="officer">
+                        <p class="title">Senior Warden</p>
+                        <p class="name">[Name]</p>
+                    </div>
+                    <div class="officer">
+                        <p class="title">Junior Warden</p>
+                        <p class="name">[Name]</p>
+                    </div>
+                    <div class="officer">
+                        <p class="title">Treasurer</p>
+                        <p class="name">[Name]</p>
+                    </div>
+                    <div class="officer">
+                        <p class="title">Secretary</p>
+                        <p class="name">[Name]</p>
+                    </div>
+                    <div class="officer">
+                        <p class="title">Chaplain</p>
+                        <p class="name">[Name]</p>
+                    </div>
+                    <div class="officer">
+                        <p class="title">Senior Deacon</p>
+                        <p class="name">[Name]</p>
+                    </div>
+                    <div class="officer">
+                        <p class="title">Junior Deacon</p>
+                        <p class="name">[Name]</p>
+                    </div>
+                    <div class="officer">
+                        <p class="title">Tiler</p>
+                        <p class="name">[Name]</p>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="contact-section">
+                <h2>Contact the Lodge</h2>
+                <div class="contact-info">
+                    <p><strong>Stated Communications:</strong> 1st & 3rd Wednesday of each month</p>
+                    <p>Meeting at 7:00 PM</p>
+                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gold-light);"><em>💡 Idea under consideration: Adding dinner at 6:00 PM before meetings</em></p>
+                    <p style="margin-top: 15px;"><strong>Secretary:</strong> <a href="mailto:ao357secretary@gmail.com">ao357secretary@gmail.com</a></p>
+                    <p><strong>Location:</strong> [Lodge Address], Miami, FL</p>
+                </div>
+            </section>
+            
+            <footer>
+                <p class="motto">Integrity • Brotherly Love • Morality</p>
+                <p class="copyright">© 2025 Alpha Omega Lodge No. 357, P.H.A., F. & A.M.</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // CHANGE THESE PASSWORDS
+        // =============================================
+        const BROTHER_PASSWORD = "AO357";      // For all brothers
+        const ADMIN_PASSWORD = "AO357Admin";   // For officers/admin
+        // =============================================
+        
+        let isAdmin = false;
+        
+        // Check if already logged in
+        const authStatus = sessionStorage.getItem('ao357_auth');
+        if (authStatus === 'brother' || authStatus === 'admin') {
+            isAdmin = (authStatus === 'admin');
+            showMainSite();
+        }
+        
+        // Handle login form
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const entered = document.getElementById('password').value;
+            
+            if (entered === ADMIN_PASSWORD) {
+                sessionStorage.setItem('ao357_auth', 'admin');
+                isAdmin = true;
+                showMainSite();
+            } else if (entered === BROTHER_PASSWORD) {
+                sessionStorage.setItem('ao357_auth', 'brother');
+                isAdmin = false;
+                showMainSite();
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+                document.getElementById('password').value = '';
+            }
+        });
+        
+        function showMainSite() {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-site').style.display = 'block';
+            
+            // Show admin section if admin
+            if (isAdmin) {
+                document.getElementById('admin-section').classList.add('visible');
+                document.getElementById('user-badge').textContent = 'Officer';
+                document.getElementById('user-badge').classList.add('admin-badge');
+            }
+        }
+        
+        function logout() {
+            sessionStorage.removeItem('ao357_auth');
+            sessionStorage.removeItem('ao357_lastActivity');
+            isAdmin = false;
+            document.getElementById('main-site').style.display = 'none';
+            document.getElementById('login-screen').style.display = 'flex';
+            document.getElementById('password').value = '';
+            document.getElementById('error-msg').style.display = 'none';
+            document.getElementById('admin-section').classList.remove('visible');
+            document.getElementById('user-badge').textContent = 'Brother';
+            document.getElementById('user-badge').classList.remove('admin-badge');
+        }
+        
+        // =============================================
+        // SESSION TIMEOUT - 30 MINUTES OF INACTIVITY
+        // =============================================
+        const TIMEOUT_MINUTES = 30;
+        const TIMEOUT_MS = TIMEOUT_MINUTES * 60 * 1000;
+        
+        // Update last activity timestamp
+        function updateActivity() {
+            sessionStorage.setItem('ao357_lastActivity', Date.now().toString());
+        }
+        
+        // Check if session has expired
+        function checkTimeout() {
+            const lastActivity = sessionStorage.getItem('ao357_lastActivity');
+            const authStatus = sessionStorage.getItem('ao357_auth');
+            
+            if (authStatus && lastActivity) {
+                const elapsed = Date.now() - parseInt(lastActivity);
+                if (elapsed > TIMEOUT_MS) {
+                    alert('Your session has expired due to inactivity. Please log in again.');
+                    logout();
+                }
+            }
+        }
+        
+        // Track user activity
+        ['click', 'keypress', 'scroll', 'mousemove', 'touchstart'].forEach(event => {
+            document.addEventListener(event, updateActivity, { passive: true });
+        });
+        
+        // Check timeout every minute
+        setInterval(checkTimeout, 60000);
+        
+        // Initialize activity timestamp on load
+        if (sessionStorage.getItem('ao357_auth')) {
+            updateActivity();
+            checkTimeout();
+        }
+    </script>
+</body>
+</html>

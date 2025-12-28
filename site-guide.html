@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Update This Site | Alpha Omega Lodge No. 357</title>
+    <script>
+        // Admin auth check - redirect to login if not admin
+        if (sessionStorage.getItem('ao357_auth') !== 'admin') {
+            window.location.href = 'index.html';
+        }
+        
+        // Session timeout check (30 minutes)
+        const TIMEOUT_MS = 30 * 60 * 1000;
+        const lastActivity = sessionStorage.getItem('ao357_lastActivity');
+        if (lastActivity && (Date.now() - parseInt(lastActivity)) > TIMEOUT_MS) {
+            sessionStorage.removeItem('ao357_auth');
+            sessionStorage.removeItem('ao357_lastActivity');
+            alert('Your session has expired due to inactivity. Please log in again.');
+            window.location.href = 'index.html';
+        }
+        
+        // Update activity on this page
+        sessionStorage.setItem('ao357_lastActivity', Date.now().toString());
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy-dark: #0a1628;
+            --navy-primary: #1a3a5c;
+            --turquoise-primary: #3ba5b5;
+            --turquoise-light: #5ec4d4;
+            --gold-accent: #d4a84b;
+            --cream: #f5f1e8;
+            --white: #ffffff;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: var(--navy-dark);
+            min-height: 100vh;
+            color: var(--cream);
+            line-height: 1.7;
+        }
+        
+        /* Top Bar */
+        .top-bar {
+            background: var(--navy-dark);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--turquoise-primary);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .top-bar a {
+            color: var(--turquoise-light);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+        
+        .top-bar a:hover {
+            color: var(--white);
+        }
+        
+        .logout-btn {
+            padding: 6px 14px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.75rem;
+            background: transparent;
+            border: 1px solid var(--turquoise-primary);
+            color: var(--turquoise-light);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .logout-btn:hover {
+            background: var(--turquoise-primary);
+            color: var(--white);
+        }
+        
+        /* Container */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        /* Header */
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            color: var(--gold-accent);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: var(--turquoise-light);
+            font-size: 0.95rem;
+            margin-bottom: 40px;
+        }
+        
+        /* Sections */
+        .section {
+            background: rgba(26, 58, 92, 0.5);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(59, 165, 181, 0.2);
+        }
+        
+        .section h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            color: var(--white);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(59, 165, 181, 0.3);
+        }
+        
+        .section h3 {
+            font-size: 1rem;
+            color: var(--turquoise-light);
+            margin: 20px 0 10px 0;
+        }
+        
+        .section p {
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+        
+        /* Steps */
+        .steps {
+            background: rgba(10, 22, 40, 0.5);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        
+        .step {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .step:last-child {
+            margin-bottom: 0;
+        }
+        
+        .step-number {
+            background: var(--turquoise-primary);
+            color: var(--white);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        
+        .step-content {
+            flex: 1;
+        }
+        
+        .step-content strong {
+            color: var(--white);
+        }
+        
+        /* Code blocks */
+        code {
+            background: rgba(59, 165, 181, 0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: var(--turquoise-light);
+        }
+        
+        .code-block {
+            background: rgba(10, 22, 40, 0.8);
+            border: 1px solid rgba(59, 165, 181, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            color: var(--turquoise-light);
+            white-space: pre-wrap;
+        }
+        
+        /* Quick Reference Table */
+        .quick-ref {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            font-size: 0.9rem;
+        }
+        
+        .quick-ref th {
+            background: var(--turquoise-primary);
+            color: var(--white);
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .quick-ref td {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(59, 165, 181, 0.2);
+        }
+        
+        .quick-ref tr:nth-child(even) {
+            background: rgba(59, 165, 181, 0.05);
+        }
+        
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .badge-auto {
+            background: #28a745;
+            color: white;
+        }
+        
+        .badge-manual {
+            background: var(--gold-accent);
+            color: var(--navy-dark);
+        }
+        
+        /* Warning box */
+        .warning {
+            background: rgba(212, 168, 75, 0.1);
+            border: 1px solid var(--gold-accent);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .warning-title {
+            color: var(--gold-accent);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        /* Links */
+        a {
+            color: var(--turquoise-light);
+        }
+        
+        a:hover {
+            color: var(--white);
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 20px;
+            border-top: 1px solid rgba(59, 165, 181, 0.2);
+        }
+        
+        .footer p {
+            color: rgba(245, 241, 232, 0.5);
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <a href="index.html">← Back to Portal</a>
+        <button class="logout-btn" onclick="logout()">Log Out</button>
+    </div>
+    
+    <div class="container">
+        <h1>📖 How to Update This Site</h1>
+        <p class="subtitle">A guide for whoever manages the lodge website</p>
+        
+        <!-- Quick Reference -->
+        <div class="section">
+            <h2>Quick Reference</h2>
+            <table class="quick-ref">
+                <tr>
+                    <th>Task</th>
+                    <th>How</th>
+                    <th>Update Type</th>
+                </tr>
+                <tr>
+                    <td>Add/edit calendar events</td>
+                    <td>Use Google Calendar</td>
+                    <td><span class="badge badge-auto">Automatic</span></td>
+                </tr>
+                <tr>
+                    <td>Update newsletter</td>
+                    <td>Edit trestle-board.html</td>
+                    <td><span class="badge badge-manual">Re-upload</span></td>
+                </tr>
+                <tr>
+                    <td>Update officer names</td>
+                    <td>Edit index.html</td>
+                    <td><span class="badge badge-manual">Re-upload</span></td>
+                </tr>
+                <tr>
+                    <td>Change passwords</td>
+                    <td>Edit index.html</td>
+                    <td><span class="badge badge-manual">Re-upload</span></td>
+                </tr>
+                <tr>
+                    <td>Update contact info</td>
+                    <td>Edit index.html</td>
+                    <td><span class="badge badge-manual">Re-upload</span></td>
+                </tr>
+            </table>
+        </div>
+        
+        <!-- Calendar Events -->
+        <div class="section">
+            <h2>📅 Updating Calendar Events</h2>
+            <p>The calendar updates <strong>automatically</strong>. No website changes needed.</p>
+            
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">Go to <a href="https://calendar.google.com" target="_blank">calendar.google.com</a></div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">Sign in with the lodge account: <code>ao357secretary@gmail.com</code></div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">Click on a date to add an event, or click an existing event to edit it</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">Save — the website calendar updates automatically</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Updating the Website -->
+        <div class="section">
+            <h2>🌐 Updating the Website (Netlify)</h2>
+            <p>For changes that require re-uploading (newsletter, officers, passwords):</p>
+            
+            <h3>First Time Setup</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">Create a free account at <a href="https://netlify.com" target="_blank">netlify.com</a> (if you don't have one)</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">Get access to the lodge site from the current admin</div>
+                </div>
+            </div>
+            
+            <h3>To Make Updates</h3>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">Download the current site files (keep a backup folder)</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">Edit the HTML file you need to change (see sections below)</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">Go to <a href="https://app.netlify.com" target="_blank">app.netlify.com</a> → your site → <strong>Deploys</strong></div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">Drag your updated folder onto the deploy area</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">Wait 10 seconds — done!</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Updating Officer Names -->
+        <div class="section">
+            <h2>👔 Updating Officer Names</h2>
+            <p>Edit the file: <code>index.html</code></p>
+            
+            <p>Search for the officers section and replace <code>[Name]</code> with actual names:</p>
+            
+            <div class="code-block">&lt;div class="officer"&gt;
+    &lt;p class="title"&gt;Worshipful Master&lt;/p&gt;
+    &lt;p class="name"&gt;[Name]&lt;/p&gt;  ← Change this
+&lt;/div&gt;</div>
+            
+            <p>Do this for each officer, then re-upload to Netlify.</p>
+        </div>
+        
+        <!-- Changing Passwords -->
+        <div class="section">
+            <h2>🔐 Changing Passwords</h2>
+            <p>Edit the file: <code>index.html</code></p>
+            
+            <p>Search for this section near the bottom of the file:</p>
+            
+            <div class="code-block">const BROTHER_PASSWORD = "AO357";      // For all brothers
+const ADMIN_PASSWORD = "AO357Admin";   // For officers/admin</div>
+            
+            <p>Change the text inside the quotes to your new passwords, then re-upload to Netlify.</p>
+            
+            <div class="warning">
+                <p class="warning-title">⚠️ Important</p>
+                <p>After changing passwords, notify all brothers of the new password. Anyone logged in will be logged out when they close their browser.</p>
+            </div>
+        </div>
+        
+        <!-- Updating the Newsletter -->
+        <div class="section">
+            <h2>📰 Updating the Newsletter</h2>
+            <p>Edit the file: <code>trestle-board.html</code></p>
+            
+            <p>This is the most complex update. You'll need to edit HTML to change:</p>
+            <ul style="margin: 15px 0 15px 25px;">
+                <li>Worshipful Master's message</li>
+                <li>Upcoming events</li>
+                <li>Announcements</li>
+                <li>Birthdays</li>
+                <li>Memorials</li>
+                <li>Volume/Issue numbers</li>
+            </ul>
+            
+            <p>Open the file in a text editor (Notepad, VS Code, etc.) and look for the text you want to change. The content is mostly plain text inside HTML tags.</p>
+            
+            <div class="warning">
+                <p class="warning-title">💡 Tip</p>
+                <p>Use "Find and Replace" (Ctrl+H or Cmd+H) to quickly update recurring text like dates or names.</p>
+            </div>
+        </div>
+        
+        <!-- File List -->
+        <div class="section">
+            <h2>📁 Website Files</h2>
+            <table class="quick-ref">
+                <tr>
+                    <th>File</th>
+                    <th>What it is</th>
+                </tr>
+                <tr>
+                    <td><code>index.html</code></td>
+                    <td>Main portal page (login, officers, contact info)</td>
+                </tr>
+                <tr>
+                    <td><code>ao357-calendar.html</code></td>
+                    <td>Calendar page (no editing needed — uses Google Calendar)</td>
+                </tr>
+                <tr>
+                    <td><code>trestle-board.html</code></td>
+                    <td>The newsletter</td>
+                </tr>
+                <tr>
+                    <td><code>site-guide.html</code></td>
+                    <td>This guide</td>
+                </tr>
+                <tr>
+                    <td><code>google-calendar-setup-guide.html</code></td>
+                    <td>Calendar setup instructions</td>
+                </tr>
+                <tr>
+                    <td><code>one-page-handout.html</code></td>
+                    <td>Digital initiative overview</td>
+                </tr>
+                <tr>
+                    <td><code>ao357logo.jpg</code></td>
+                    <td>Lodge logo image</td>
+                </tr>
+                <tr>
+                    <td><code>ao357-qr-code.png</code></td>
+                    <td>QR code image for sharing</td>
+                </tr>
+                <tr>
+                    <td><code>ao357-site-backup.zip</code></td>
+                    <td>Downloadable backup of all site files</td>
+                </tr>
+            </table>
+            
+            <div class="warning">
+                <p class="warning-title">💾 Keeping the Backup ZIP Current</p>
+                <p>The "Download Site Files" link in the admin section gives officers a copy of the website files. <strong>After making updates</strong>, you should update this backup:</p>
+                <ol style="margin: 10px 0 0 20px;">
+                    <li>Select all the website files (not including the old ZIP)</li>
+                    <li>Compress them into a new ZIP named <code>ao357-site-backup.zip</code></li>
+                    <li>Include the new ZIP when you upload to Netlify</li>
+                </ol>
+                <p style="margin-top: 10px;">This ensures officers always download the latest version.</p>
+            </div>
+        </div>
+        
+        <!-- Account Info -->
+        <div class="section">
+            <h2>🔑 Account Information</h2>
+            <table class="quick-ref">
+                <tr>
+                    <th>Service</th>
+                    <th>Account</th>
+                    <th>Used For</th>
+                </tr>
+                <tr>
+                    <td>Google (Calendar)</td>
+                    <td><code>ao357secretary@gmail.com</code></td>
+                    <td>Calendar events, Google Group</td>
+                </tr>
+                <tr>
+                    <td>Netlify</td>
+                    <td>[Your Netlify account]</td>
+                    <td>Website hosting</td>
+                </tr>
+                <tr>
+                    <td>Google Group</td>
+                    <td><code>ao357members@googlegroups.com</code></td>
+                    <td>Member access control</td>
+                </tr>
+            </table>
+            
+            <div class="warning">
+                <p class="warning-title">⚠️ Keep Passwords Secure</p>
+                <p>Store login credentials securely. Only share with authorized officers.</p>
+            </div>
+        </div>
+        
+        <!-- Need Help -->
+        <div class="section">
+            <h2>❓ Need Help?</h2>
+            <p>If you get stuck or something breaks:</p>
+            <ul style="margin: 15px 0 15px 25px;">
+                <li>Don't panic — you can always re-upload the last working version</li>
+                <li>Keep a backup of working files before making changes</li>
+                <li>For major changes, consult with someone who knows HTML</li>
+                <li>Google and YouTube have tutorials for basic HTML editing</li>
+            </ul>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>© 2025 Alpha Omega Lodge No. 357, P.H.A., F. & A.M.</p>
+        </div>
+    </div>
+    
+    <script>
+        function logout() {
+            sessionStorage.removeItem('ao357_auth');
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

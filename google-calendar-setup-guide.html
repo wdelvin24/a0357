@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar Management Guide | Alpha Omega Lodge No. 357</title>
+    <script>
+        // Admin auth check - redirect to login if not admin
+        if (sessionStorage.getItem('ao357_auth') !== 'admin') {
+            window.location.href = 'index.html';
+        }
+        
+        // Session timeout check (30 minutes)
+        const TIMEOUT_MS = 30 * 60 * 1000;
+        const lastActivity = sessionStorage.getItem('ao357_lastActivity');
+        if (lastActivity && (Date.now() - parseInt(lastActivity)) > TIMEOUT_MS) {
+            sessionStorage.removeItem('ao357_auth');
+            sessionStorage.removeItem('ao357_lastActivity');
+            alert('Your session has expired due to inactivity. Please log in again.');
+            window.location.href = 'index.html';
+        }
+        
+        // Update activity on this page
+        sessionStorage.setItem('ao357_lastActivity', Date.now().toString());
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy-dark: #0a1628;
+            --navy-primary: #1a3a5c;
+            --turquoise-primary: #3ba5b5;
+            --turquoise-light: #5ec4d4;
+            --gold-accent: #d4a84b;
+            --cream: #f5f1e8;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            background: var(--cream); 
+            line-height: 1.7;
+            color: #333;
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        .header {
+            background: linear-gradient(135deg, var(--navy-dark), var(--navy-primary));
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            margin: -20px -20px 30px -20px;
+        }
+        .header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+        .header p {
+            color: var(--turquoise-light);
+            font-size: 0.9rem;
+        }
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+        .section h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--navy-primary);
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--turquoise-primary);
+        }
+        .section h3 {
+            color: var(--turquoise-primary);
+            font-size: 1.1rem;
+            margin: 25px 0 15px 0;
+        }
+        .section h3:first-of-type {
+            margin-top: 0;
+        }
+        .step {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: flex-start;
+        }
+        .step-number {
+            background: var(--turquoise-primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .step-content {
+            flex: 1;
+        }
+        .step-content strong {
+            color: var(--navy-primary);
+        }
+        .tip {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .tip strong {
+            color: #2e7d32;
+        }
+        .warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        .warning strong {
+            color: #e65100;
+        }
+        .quick-action {
+            background: linear-gradient(135deg, var(--navy-primary), var(--turquoise-primary));
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .quick-action h4 {
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+        .quick-action p {
+            font-size: 0.95rem;
+            opacity: 0.95;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background: var(--navy-primary);
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        ul, ol {
+            margin: 10px 0 10px 25px;
+        }
+        li {
+            margin-bottom: 8px;
+        }
+        a {
+            color: var(--turquoise-primary);
+        }
+        .login-info {
+            background: var(--navy-dark);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .login-info h4 {
+            color: var(--gold-accent);
+            margin-bottom: 10px;
+        }
+        .login-info p {
+            margin-bottom: 5px;
+            font-family: monospace;
+            font-size: 0.95rem;
+        }
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.4rem; }
+            .step { flex-direction: column; }
+            .step-number { margin-bottom: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div style="background: #1a3a5c; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;">
+        <a href="index.html" style="color: #5ec4d4; text-decoration: none; font-family: Arial, sans-serif; font-size: 0.85rem;">← Back to Portal</a>
+        <button onclick="logout()" style="padding: 6px 14px; font-family: Arial, sans-serif; font-size: 0.75rem; background: transparent; border: 1px solid #3ba5b5; color: #5ec4d4; border-radius: 4px; cursor: pointer;">Log Out</button>
+    </div>
+    <script>
+        function logout() {
+            sessionStorage.removeItem('ao357_auth');
+            window.location.href = 'index.html';
+        }
+    </script>
+    
+    <div class="container">
+        <div class="header">
+            <h1>📅 Calendar Management Guide</h1>
+            <p>How to add, edit, and manage lodge events</p>
+        </div>
+
+        <!-- QUICK START -->
+        <div class="section">
+            <h2>Quick Start: Access the Calendar</h2>
+            
+            <div class="login-info">
+                <h4>🔑 Login Information</h4>
+                <p><strong>Website:</strong> calendar.google.com</p>
+                <p><strong>Account:</strong> ao357secretary@gmail.com</p>
+                <p><strong>Password:</strong> [Stored securely by officers]</p>
+            </div>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <strong>Go to <a href="https://calendar.google.com" target="_blank">calendar.google.com</a></strong>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <strong>Sign in</strong> with the lodge Google account
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <strong>Find the calendar</strong> — Look for "Alpha Omega Lodge No. 357 Events" in the left sidebar
+                </div>
+            </div>
+        </div>
+
+        <!-- ADDING EVENTS -->
+        <div class="section">
+            <h2>Adding a New Event</h2>
+            
+            <h3>Method 1: Click on the Date</h3>
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <strong>Click on the date</strong> where you want to add the event
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <strong>Click "More options"</strong> for the full event form
+                </div>
+            </div>
+            
+            <h3>Method 2: Create Button</h3>
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <strong>Click "+ Create"</strong> button (top left corner)
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <strong>Select "Event"</strong>
+                </div>
+            </div>
+
+            <h3>Fill in Event Details</h3>
+            <table>
+                <tr>
+                    <th>Field</th>
+                    <th>What to Enter</th>
+                </tr>
+                <tr>
+                    <td><strong>Title</strong></td>
+                    <td>Event name (e.g., "Stated Communication", "Fish Fry")</td>
+                </tr>
+                <tr>
+                    <td><strong>Date & Time</strong></td>
+                    <td>When it starts and ends</td>
+                </tr>
+                <tr>
+                    <td><strong>Location</strong></td>
+                    <td>Lodge address or event venue</td>
+                </tr>
+                <tr>
+                    <td><strong>Description</strong></td>
+                    <td>Details, dress code, what to bring, etc.</td>
+                </tr>
+            </table>
+            
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <strong>Click "Save"</strong> — The event appears on the website automatically!
+                </div>
+            </div>
+
+            <div class="tip">
+                <strong>💡 Tip:</strong> For events like dress code reminders or dues deadlines, put all the details in the Description field. Brothers can see it when they click the event.
+            </div>
+        </div>
+
+        <!-- EDITING EVENTS -->
+        <div class="section">
+            <h2>Editing an Existing Event</h2>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <strong>Click on the event</strong> in the calendar
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <strong>Click the pencil icon ✏️</strong> (Edit event)
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <strong>Make your changes</strong> (time, location, description, etc.)
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <strong>Click "Save"</strong>
+                </div>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ For Recurring Events:</strong> When you edit a recurring event (like stated meetings), Google will ask if you want to change "This event," "This and following events," or "All events." Choose carefully!
+            </div>
+        </div>
+
+        <!-- DELETING EVENTS -->
+        <div class="section">
+            <h2>Deleting an Event</h2>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <strong>Click on the event</strong>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <strong>Click the trash icon 🗑️</strong> (Delete)
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <strong>Confirm deletion</strong>
+                </div>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ For Recurring Events:</strong> You'll be asked if you want to delete just this one, or all future occurrences. Choose "This event" if it's just a one-time cancellation.
+            </div>
+        </div>
+
+        <!-- RECURRING EVENTS -->
+        <div class="section">
+            <h2>Creating Recurring Events</h2>
+            <p>For events that happen regularly (stated meetings, education nights, etc.):</p>
+            
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <strong>Create the event</strong> as normal
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <strong>Click "Does not repeat"</strong> dropdown
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <strong>Select a pattern:</strong>
+                    <ul>
+                        <li><strong>Weekly</strong> — For practice nights</li>
+                        <li><strong>Monthly on the first Wednesday</strong> — For 1st Wed stated meetings</li>
+                        <li><strong>Monthly on the third Wednesday</strong> — For 3rd Wed stated meetings</li>
+                        <li><strong>Custom</strong> — For other patterns</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                    <strong>Set an end date</strong> (e.g., December 2026)
+                </div>
+            </div>
+
+            <div class="quick-action">
+                <h4>📋 Your Recurring Events</h4>
+                <p><strong>Stated Communications:</strong> 1st & 3rd Wednesday at 7:00 PM<br>
+                (Create two separate recurring events — one for 1st Wed, one for 3rd Wed)</p>
+            </div>
+        </div>
+
+        <!-- COMMON TASKS -->
+        <div class="section">
+            <h2>Common Tasks</h2>
+            
+            <h3>Adding Grand Lodge Communications</h3>
+            <p>When you receive info from Grand Lodge (dress codes, deadlines, etc.):</p>
+            <ol>
+                <li>Create an event on the relevant date</li>
+                <li>Title: Clear description (e.g., "⚠️ Dues Deadline - $165 Rate")</li>
+                <li>Description: Paste or type all the details</li>
+                <li>For dress codes: Create an event the day before the festive day</li>
+            </ol>
+
+            <h3>Adding Degree Work</h3>
+            <ol>
+                <li>Title: "EA Degree" / "FC Degree" / "MM Degree"</li>
+                <li>Include candidate info in description (if appropriate)</li>
+                <li>Note any special requirements (attire, rehearsal times)</li>
+            </ol>
+
+            <h3>Adding Fundraisers</h3>
+            <ol>
+                <li>Title: Clear name (e.g., "Annual Fish Fry")</li>
+                <li>Include: Time, location, ticket prices, what's needed</li>
+                <li>Add setup time as a separate event if needed</li>
+            </ol>
+
+            <h3>Meeting Cancelled?</h3>
+            <ol>
+                <li>Click on the event</li>
+                <li>Click Edit (pencil icon)</li>
+                <li>Add "CANCELLED - " to the beginning of the title</li>
+                <li>Add reason in description</li>
+                <li>Or delete the single occurrence</li>
+            </ol>
+        </div>
+
+        <!-- EVENT TYPES -->
+        <div class="section">
+            <h2>Event Categories (Color Coding)</h2>
+            <p>Use colors to help brothers quickly identify event types:</p>
+            
+            <table>
+                <tr>
+                    <th>Event Type</th>
+                    <th>Suggested Color</th>
+                </tr>
+                <tr>
+                    <td>Stated Meetings</td>
+                    <td style="background: #3ba5b5; color: white;">Teal/Turquoise</td>
+                </tr>
+                <tr>
+                    <td>Degree Work</td>
+                    <td style="background: #1a3a5c; color: white;">Navy/Blue</td>
+                </tr>
+                <tr>
+                    <td>Special Events</td>
+                    <td style="background: #d4a84b; color: #0a1628;">Gold/Yellow</td>
+                </tr>
+                <tr>
+                    <td>Community Service</td>
+                    <td style="background: #28a745; color: white;">Green</td>
+                </tr>
+                <tr>
+                    <td>Fundraisers</td>
+                    <td style="background: #dc3545; color: white;">Red</td>
+                </tr>
+                <tr>
+                    <td>District/Grand Lodge</td>
+                    <td style="background: #6f42c1; color: white;">Purple</td>
+                </tr>
+            </table>
+            
+            <p><strong>To set color:</strong> When creating/editing an event, click the colored circle next to the calendar name.</p>
+        </div>
+
+        <!-- TROUBLESHOOTING -->
+        <div class="section">
+            <h2>Troubleshooting</h2>
+            
+            <h3>Event not showing on website?</h3>
+            <ul>
+                <li>Make sure you saved the event</li>
+                <li>Refresh the website page</li>
+                <li>Check that you added it to the correct calendar (Alpha Omega Lodge No. 357 Events)</li>
+            </ul>
+
+            <h3>Can't sign in?</h3>
+            <ul>
+                <li>Make sure you're using the lodge Google account, not your personal one</li>
+                <li>Check with another officer for the correct password</li>
+                <li>Try "Forgot password" if needed</li>
+            </ul>
+
+            <h3>Accidentally deleted something?</h3>
+            <ul>
+                <li>Check the Trash in Google Calendar (Settings → Trash)</li>
+                <li>Deleted events stay in trash for 30 days</li>
+            </ul>
+        </div>
+
+        <!-- HANDOFF -->
+        <div class="section">
+            <h2>Handing Off to the Next Person</h2>
+            <p>When passing this responsibility to another officer:</p>
+            
+            <ol>
+                <li><strong>Share login credentials</strong> securely (in person, not via text/email)</li>
+                <li><strong>Walk through this guide</strong> together</li>
+                <li><strong>Have them add a test event</strong> while you watch</li>
+                <li><strong>Show them how to edit and delete</strong></li>
+                <li><strong>Explain the color coding system</strong></li>
+            </ol>
+
+            <div class="tip">
+                <strong>💡 Tip:</strong> The calendar updates automatically on the website. No website changes needed — just manage events in Google Calendar!
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 40px; padding: 30px; border-top: 2px solid var(--turquoise-primary);">
+            <p style="font-family: 'Cinzel', serif; color: var(--navy-primary); font-size: 1.1rem;">Alpha Omega Lodge No. 357, P.H.A., F. & A.M.</p>
+            <p style="color: var(--gold-accent); margin-top: 10px;">Integrity • Brotherly Love • Morality</p>
+        </div>
+    </div>
+</body>
+</html>

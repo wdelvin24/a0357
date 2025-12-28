@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Communications Proposal | Alpha Omega Lodge No. 357</title>
+    <script>
+        // Admin auth check - redirect to login if not admin
+        if (sessionStorage.getItem('ao357_auth') !== 'admin') {
+            window.location.href = 'index.html';
+        }
+        
+        // Session timeout check (30 minutes)
+        const TIMEOUT_MS = 30 * 60 * 1000;
+        const lastActivity = sessionStorage.getItem('ao357_lastActivity');
+        if (lastActivity && (Date.now() - parseInt(lastActivity)) > TIMEOUT_MS) {
+            sessionStorage.removeItem('ao357_auth');
+            sessionStorage.removeItem('ao357_lastActivity');
+            alert('Your session has expired due to inactivity. Please log in again.');
+            window.location.href = 'index.html';
+        }
+        
+        // Update activity on this page
+        sessionStorage.setItem('ao357_lastActivity', Date.now().toString());
+    </script>
+    <style>
+        @page { size: letter; margin: 0.5in; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #1a1a1a;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 3px solid #3ba5b5;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            font-size: 22pt;
+            color: #1a3a5c;
+            margin-bottom: 5px;
+        }
+        .header p {
+            color: #3ba5b5;
+            font-size: 10pt;
+        }
+        .section {
+            margin-bottom: 18px;
+        }
+        .section h2 {
+            font-size: 13pt;
+            color: #1a3a5c;
+            border-left: 4px solid #d4a84b;
+            padding-left: 10px;
+            margin-bottom: 10px;
+        }
+        .two-col {
+            display: flex;
+            gap: 20px;
+        }
+        .two-col > div { flex: 1; }
+        .box {
+            background: #f5f9fa;
+            border: 1px solid #3ba5b5;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+        .box h3 {
+            font-size: 11pt;
+            color: #3ba5b5;
+            margin-bottom: 6px;
+        }
+        .box ul {
+            margin-left: 18px;
+            font-size: 10pt;
+        }
+        .box ul li { margin-bottom: 3px; }
+        .highlight {
+            background: linear-gradient(135deg, #1a3a5c, #1a6b7a);
+            color: white;
+            border-radius: 6px;
+            padding: 15px;
+            text-align: center;
+            margin: 15px 0;
+        }
+        .highlight .big { font-size: 28pt; font-weight: bold; color: #d4a84b; }
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .step {
+            background: #f5f9fa;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+        }
+        .step .num {
+            width: 28px;
+            height: 28px;
+            background: #3ba5b5;
+            color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .step p { font-size: 9pt; }
+        .footer {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 2px solid #d4a84b;
+            text-align: center;
+            font-size: 9pt;
+            color: #666;
+        }
+        .footer strong { color: #1a3a5c; }
+        .motion-box {
+            border: 2px solid #d4a84b;
+            background: #fffbf0;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+        .motion-box h3 { color: #d4a84b; margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <div style="background: #1a3a5c; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <a href="index.html" style="color: #5ec4d4; text-decoration: none; font-family: Arial, sans-serif; font-size: 0.85rem;">← Back to Portal</a>
+        <button onclick="logout()" style="padding: 6px 14px; font-family: Arial, sans-serif; font-size: 0.75rem; background: transparent; border: 1px solid #3ba5b5; color: #5ec4d4; border-radius: 4px; cursor: pointer;">Log Out</button>
+    </div>
+    <script>
+        function logout() {
+            sessionStorage.removeItem('ao357_auth');
+            window.location.href = 'index.html';
+        }
+    </script>
+    <div class="header">
+        <h1>Going Digital: A Proposal for Lodge Communications</h1>
+        <p>ALPHA OMEGA LODGE NO. 357, P.H.A. • MIAMI, FLORIDA</p>
+    </div>
+
+    <div class="section">
+        <h2>The Challenge</h2>
+        <p>Brothers miss meetings due to forgotten dates and scheduling conflicts. Phone trees are unreliable, email goes unchecked, and younger members expect modern communication. <strong>78% of Americans use smartphone calendars</strong> — it's time we meet brothers where they are.</p>
+    </div>
+
+    <div class="section">
+        <h2>The Solution</h2>
+        <div class="two-col">
+            <div class="box">
+                <h3>📅 Digital Calendar</h3>
+                <ul>
+                    <li>Syncs to every brother's phone automatically</li>
+                    <li>Reminders before meetings and events</li>
+                    <li>Works with Google, Apple, Outlook</li>
+                    <li>One-time subscribe — always updated</li>
+                </ul>
+            </div>
+            <div class="box">
+                <h3>📰 The Trestle Board Newsletter</h3>
+                <ul>
+                    <li>Professional digital newsletter</li>
+                    <li>WM message, calendar, announcements</li>
+                    <li>Fundraiser and community updates</li>
+                    <li>Memorial page for fallen brothers</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>What We'll Track</h2>
+        <p style="font-size: 10pt; margin-bottom: 8px;">Color-coded events so brothers see at a glance what's coming:</p>
+        <p style="font-size: 10pt;">
+            <span style="color: #3ba5b5;">■</span> Stated Meetings &nbsp;
+            <span style="color: #1a3a5c;">■</span> Degree Work &nbsp;
+            <span style="color: #d4a84b;">■</span> Special Events &nbsp;
+            <span style="color: #28a745;">■</span> Community Service &nbsp;
+            <span style="color: #dc3545;">■</span> Fundraisers &nbsp;
+            <span style="color: #6f42c1;">■</span> District/Grand Lodge
+        </p>
+    </div>
+
+    <div class="highlight">
+        <p class="big">$0</p>
+        <p>Total Cost to Lodge — All tools are FREE (Google Calendar, HTML newsletter)</p>
+    </div>
+
+    <div class="section">
+        <h2>Implementation Timeline</h2>
+        <div class="grid-3">
+            <div class="step">
+                <div class="num">1</div>
+                <p><strong>TODAY</strong><br>Vote to approve initiative</p>
+            </div>
+            <div class="step">
+                <div class="num">2</div>
+                <p><strong>THIS WEEK</strong><br>JW creates calendar with 2025 events</p>
+            </div>
+            <div class="step">
+                <div class="num">3</div>
+                <p><strong>NEXT MEETING</strong><br>Demo system & help brothers subscribe</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="motion-box">
+        <h3>Motion Requested</h3>
+        <p>Authorize the Junior Warden to implement a digital calendar and newsletter system for lodge communications.</p>
+    </div>
+
+    <div class="footer">
+        <p><strong>Time Investment:</strong> Initial setup ~2 hours | Monthly maintenance ~30 min | Newsletter ~1 hour per issue</p>
+        <p style="margin-top: 8px;"><strong>Responsibility:</strong> Junior Warden manages calendar; coordinates with Secretary for newsletter content</p>
+        <p style="margin-top: 12px; color: #d4a84b; letter-spacing: 2px;">BROTHERLY LOVE • RELIEF • TRUTH</p>
+    </div>
+</body>
+</html>
