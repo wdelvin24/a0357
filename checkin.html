@@ -303,7 +303,7 @@
 </head>
 <body>
     <div class="top-bar">
-        <a href="index.html">← Back to Portal</a>
+        <a href="portal.html">← Back to Portal</a>
         <button class="logout-btn" onclick="logout()">Log Out</button>
     </div>
     
@@ -325,23 +325,17 @@
             </div>
             
             <div id="checkin-form">
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <p style="color: var(--turquoise-light); font-size: 0.9rem;">Checking in as:</p>
+                    <p style="color: var(--gold-accent); font-size: 1.3rem; font-family: 'Cinzel', serif; margin-top: 5px;" id="checkin-member-name">Loading...</p>
+                </div>
+                
                 <div class="code-entry">
                     <p>Enter the code displayed at the lodge:</p>
                     <input type="text" id="eventCode" class="code-input" placeholder="AO357-MMDDYY" maxlength="13">
                 </div>
                 
-                <div class="form-group">
-                    <label>Select Your Name</label>
-                    <select id="checkin-name">
-                        <option value="">Loading members...</option>
-                    </select>
-                </div>
-                
                 <button class="btn btn-primary" onclick="submitCheckIn()">✓ Check In</button>
-                
-                <p style="text-align: center; margin-top: 20px; font-size: 0.85rem; color: var(--turquoise-light);">
-                    Not in the list? <a href="#" onclick="showTab('profile')" style="color: var(--gold-accent);">Create your profile first</a>
-                </p>
             </div>
             
             <div id="checkin-success" class="check-success" style="display: none;">
@@ -397,6 +391,17 @@
                     <input type="text" id="member-raised" placeholder="2015" maxlength="4">
                 </div>
                 
+                <div class="form-group">
+                    <label>Create Your PIN * (4 digits)</label>
+                    <input type="password" id="member-pin" placeholder="••••" maxlength="4" inputmode="numeric" pattern="[0-9]*">
+                    <small style="color: var(--turquoise-light); font-size: 0.75rem;">You'll use this PIN to log in</small>
+                </div>
+                
+                <div class="form-group">
+                    <label>Confirm PIN *</label>
+                    <input type="password" id="member-pin-confirm" placeholder="••••" maxlength="4" inputmode="numeric" pattern="[0-9]*">
+                </div>
+                
                 <button class="btn btn-primary" onclick="saveProfile()">Save Profile</button>
             </div>
         </div>
@@ -442,13 +447,18 @@
         }
         
         async function loadMembers() {
+            // Display logged-in member name
+            const memberName = sessionStorage.getItem('ao357_name');
+            if (memberName) {
+                document.getElementById('checkin-member-name').textContent = memberName;
+            }
+            
             try {
                 const response = await fetch(API_URL + '?action=getMembers');
                 const data = await response.json();
                 
                 if (data.success) {
                     members = data.members;
-                    populateMemberDropdown();
                     
                     // Check if user has a saved profile
                     if (savedMemberId) {
@@ -463,20 +473,6 @@
             }
         }
         
-        function populateMemberDropdown() {
-            const select = document.getElementById('checkin-name');
-            select.innerHTML = '<option value="">-- Select Your Name --</option>';
-            
-            members.sort((a, b) => a.name.localeCompare(b.name));
-            
-            members.forEach(member => {
-                const option = document.createElement('option');
-                option.value = member.name;
-                option.textContent = member.name;
-                select.appendChild(option);
-            });
-        }
-        
         function showTab(tab) {
             document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
@@ -488,11 +484,11 @@
         }
         
         async function submitCheckIn() {
-            const name = document.getElementById('checkin-name').value;
+            const name = sessionStorage.getItem('ao357_name');
             const eventCode = document.getElementById('eventCode').value.toUpperCase();
             
             if (!name) {
-                showMessage('Please select your name', 'error');
+                showMessage('Please log in first', 'error');
                 return;
             }
             
@@ -535,6 +531,8 @@
             const email = document.getElementById('member-email').value.trim();
             const phone = document.getElementById('member-phone').value.trim();
             const yearRaised = document.getElementById('member-raised').value.trim();
+            const pin = document.getElementById('member-pin').value.trim();
+            const pinConfirm = document.getElementById('member-pin-confirm').value.trim();
             
             if (!name || !birthday) {
                 showMessage('Name and Birthday are required', 'error');
@@ -553,6 +551,34 @@
                 return;
             }
             
+            // Validate PIN for new members
+            if (!currentMember) {
+                if (!pin) {
+                    showMessage('PIN is required', 'error');
+                    return;
+                }
+                if (!/^\d{4}$/.test(pin)) {
+                    showMessage('PIN must be exactly 4 digits', 'error');
+                    return;
+                }
+                if (pin !== pinConfirm) {
+                    showMessage('PINs do not match', 'error');
+                    return;
+                }
+            }
+            
+            // For updates, only validate PIN if they're changing it
+            if (currentMember && pin) {
+                if (!/^\d{4}$/.test(pin)) {
+                    showMessage('PIN must be exactly 4 digits', 'error');
+                    return;
+                }
+                if (pin !== pinConfirm) {
+                    showMessage('PINs do not match', 'error');
+                    return;
+                }
+            }
+            
             try {
                 const action = currentMember ? 'updateMember' : 'addMember';
                 const payload = {
@@ -563,6 +589,11 @@
                     phone: phone,
                     yearRaised: yearRaised
                 };
+                
+                // Include PIN if provided
+                if (pin) {
+                    payload.pin = pin;
+                }
                 
                 if (currentMember) {
                     payload.memberId = currentMember.memberId;
