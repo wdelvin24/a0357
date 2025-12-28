@@ -4,858 +4,569 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alpha Omega Lodge No. 357 | Members Portal</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="apple-touch-icon" href="ao357logo.jpg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AO357">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --navy-dark: #0a1628;
-            --navy: #1a3a5c;
-            --navy-light: #2d5a87;
-            --turquoise-dark: #1a6b7a;
+            --navy-primary: #1a3a5c;
+            --navy-light: #2a4a6c;
             --turquoise: #3ba5b5;
             --turquoise-light: #5ec4d4;
             --gold: #d4a84b;
-            --gold-light: #e8c87a;
+            --gold-light: #e5c879;
             --cream: #f5f1e8;
             --white: #ffffff;
         }
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: 'Cormorant Garamond', Georgia, serif;
-            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 100%);
-            min-height: 100vh;
-            color: var(--cream);
-        }
-        
-        /* LOGIN SCREEN */
-        #login-screen {
+            font-family: 'Montserrat', sans-serif;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-primary) 50%, var(--navy-dark) 100%);
             padding: 20px;
         }
         
-        .login-box {
-            background: rgba(26, 58, 92, 0.8);
-            border: 1px solid var(--turquoise);
-            border-radius: 16px;
-            padding: 50px 40px;
-            text-align: center;
+        .login-container {
+            width: 100%;
             max-width: 400px;
-            width: 100%;
-        }
-        
-        .login-logo {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 25px;
-            border: 3px solid var(--gold);
-        }
-        
-        .login-box h1 {
-            font-family: 'Cinzel', serif;
-            font-size: 1.5rem;
-            color: var(--white);
-            margin-bottom: 8px;
-        }
-        
-        .login-box .subtitle {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.75rem;
-            color: var(--turquoise-light);
-            letter-spacing: 2px;
-            margin-bottom: 30px;
-        }
-        
-        .login-box label {
-            display: block;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.85rem;
-            color: var(--gold);
-            margin-bottom: 10px;
-            text-align: left;
-        }
-        
-        .login-box input {
-            width: 100%;
-            padding: 14px 18px;
-            font-size: 1rem;
-            border: 1px solid var(--turquoise-dark);
-            border-radius: 8px;
-            background: rgba(10, 22, 40, 0.8);
-            color: var(--white);
-            margin-bottom: 20px;
-            font-family: 'Montserrat', sans-serif;
-        }
-        
-        .login-box input:focus {
-            outline: none;
-            border-color: var(--turquoise);
-        }
-        
-        .login-box input::placeholder {
-            color: rgba(245, 241, 232, 0.4);
-        }
-        
-        .login-box button {
-            width: 100%;
-            padding: 14px;
-            font-family: 'Cinzel', serif;
-            font-size: 1rem;
-            font-weight: 600;
-            background: linear-gradient(135deg, var(--gold), var(--gold-light));
-            color: var(--navy-dark);
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .login-box button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(212, 168, 75, 0.4);
-        }
-        
-        .error-msg {
-            color: #e74c3c;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.85rem;
-            margin-top: 15px;
-            display: none;
-        }
-        
-        .login-footer {
-            margin-top: 30px;
-            font-size: 0.8rem;
-            color: rgba(245, 241, 232, 0.5);
-        }
-
-        /* MAIN SITE - Hidden until login */
-        #main-site {
-            display: none;
-        }
-        
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-        
-        /* Header */
-        header {
             text-align: center;
-            padding: 60px 20px;
-            border-bottom: 1px solid rgba(59, 165, 181, 0.3);
-            margin-bottom: 50px;
         }
         
-        .header-logo {
-            width: 150px;
-            height: 150px;
+        .logo {
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 25px;
             border: 3px solid var(--gold);
+            margin-bottom: 20px;
+            box-shadow: 0 0 30px rgba(212, 168, 75, 0.3);
         }
         
-        header h1 {
+        h1 {
             font-family: 'Cinzel', serif;
-            font-size: 2.5rem;
+            font-size: 1.6rem;
             color: var(--white);
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            color: var(--gold);
+            font-size: 0.8rem;
             letter-spacing: 3px;
-            margin-bottom: 10px;
-        }
-        
-        header .subtitle {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.9rem;
-            color: var(--turquoise-light);
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-        }
-        
-        .established {
-            font-style: italic;
-            color: var(--gold-light);
-            font-size: 1.1rem;
-        }
-        
-        /* Welcome Section */
-        .welcome {
-            text-align: center;
-            max-width: 700px;
-            margin: 0 auto 50px;
-            padding: 0 20px;
-        }
-        
-        .welcome h2 {
-            font-family: 'Cinzel', serif;
-            color: var(--gold);
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-        }
-        
-        .welcome p {
-            font-size: 1.15rem;
-            line-height: 1.8;
-            color: var(--cream);
-        }
-        
-        /* Navigation Cards */
-        .nav-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-            margin-bottom: 60px;
-        }
-        
-        .nav-card {
-            background: linear-gradient(180deg, rgba(26, 58, 92, 0.8) 0%, rgba(10, 22, 40, 0.9) 100%);
-            border: 1px solid rgba(59, 165, 181, 0.3);
-            border-radius: 12px;
-            padding: 30px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: block;
-        }
-        
-        .nav-card:hover {
-            border-color: var(--turquoise);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 40px rgba(59, 165, 181, 0.2);
-        }
-        
-        .nav-card .icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-        }
-        
-        .nav-card h3 {
-            font-family: 'Cinzel', serif;
-            color: var(--white);
-            font-size: 1.3rem;
-            margin-bottom: 10px;
-        }
-        
-        .nav-card p {
-            font-family: 'Montserrat', sans-serif;
-            color: var(--turquoise-light);
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-        
-        .nav-card.featured {
-            border-color: var(--gold);
-            background: linear-gradient(180deg, rgba(212, 168, 75, 0.1) 0%, rgba(10, 22, 40, 0.9) 100%);
-        }
-        
-        .nav-card.featured:hover {
-            border-color: var(--gold-light);
-            box-shadow: 0 10px 40px rgba(212, 168, 75, 0.2);
-        }
-        
-        /* Share Section */
-        .share-section {
-            background: linear-gradient(135deg, rgba(26, 58, 92, 0.6) 0%, rgba(10, 22, 40, 0.8) 100%);
-            border: 1px solid rgba(59, 165, 181, 0.3);
-            border-radius: 12px;
-            padding: 35px;
-            margin-bottom: 60px;
-            text-align: center;
-        }
-        
-        .share-section h2 {
-            font-family: 'Cinzel', serif;
-            color: var(--white);
-            font-size: 1.4rem;
-            margin-bottom: 8px;
-        }
-        
-        .share-subtitle {
-            color: var(--turquoise-light);
-            font-size: 0.95rem;
-            margin-bottom: 25px;
-        }
-        
-        .share-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap;
-        }
-        
-        .qr-box {
-            text-align: center;
-        }
-        
-        .qr-image {
-            width: 140px;
-            height: 140px;
-            background: white;
-            border-radius: 10px;
-            padding: 8px;
-        }
-        
-        .qr-label {
-            color: var(--cream);
-            font-size: 0.8rem;
-            margin-top: 10px;
-            opacity: 0.8;
-        }
-        
-        .instructions-box {
-            display: flex;
-            gap: 30px;
-            text-align: left;
-        }
-        
-        .device-instructions h3 {
-            color: var(--turquoise-light);
-            font-size: 1rem;
-            margin-bottom: 10px;
-        }
-        
-        .device-instructions ol {
-            color: var(--cream);
-            font-size: 0.85rem;
-            line-height: 1.8;
-            padding-left: 20px;
-        }
-        
-        .device-instructions strong {
-            color: var(--white);
-        }
-        
-        @media (max-width: 600px) {
-            .share-content {
-                flex-direction: column;
-            }
-            .instructions-box {
-                flex-direction: column;
-                gap: 20px;
-            }
-        }
-        
-        /* Admin Section */
-        .admin-section {
-            display: none;
-            margin-bottom: 60px;
-        }
-        
-        .admin-section.visible {
-            display: block;
-        }
-        
-        .admin-header {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.8rem;
-            color: var(--gold);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(212, 168, 75, 0.3);
-        }
-        
-        .admin-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
-        }
-        
-        .nav-card.admin {
-            border-color: rgba(212, 168, 75, 0.4);
-            background: linear-gradient(180deg, rgba(212, 168, 75, 0.05) 0%, rgba(10, 22, 40, 0.9) 100%);
-        }
-        
-        .nav-card.admin:hover {
-            border-color: var(--gold);
-            box-shadow: 0 10px 40px rgba(212, 168, 75, 0.15);
-        }
-        
-        /* Officers Section */
-        .officers-section {
-            background: rgba(26, 58, 92, 0.5);
-            border-radius: 12px;
-            padding: 40px;
-            margin-bottom: 50px;
-            border: 1px solid rgba(59, 165, 181, 0.2);
-        }
-        
-        .officers-section h2 {
-            font-family: 'Cinzel', serif;
-            color: var(--gold);
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 1.5rem;
-        }
-        
-        .officers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        
-        .officer {
-            text-align: center;
-            padding: 15px;
-        }
-        
-        .officer .title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.75rem;
-            color: var(--turquoise-light);
-            text-transform: uppercase;
-            letter-spacing: 2px;
             margin-bottom: 5px;
         }
         
-        .officer .name {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: 1.1rem;
-            color: var(--white);
-        }
-        
-        /* Contact Section */
-        .contact-section {
-            text-align: center;
-            padding: 40px 20px;
-            border-top: 1px solid rgba(59, 165, 181, 0.3);
-        }
-        
-        .contact-section h2 {
-            font-family: 'Cinzel', serif;
-            color: var(--gold);
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-        }
-        
-        .contact-info {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.95rem;
-            color: var(--cream);
-            line-height: 2;
-        }
-        
-        .contact-info a {
+        .established {
             color: var(--turquoise-light);
-            text-decoration: none;
+            font-size: 0.75rem;
+            font-style: italic;
+            margin-bottom: 30px;
         }
         
-        .contact-info a:hover {
-            color: var(--turquoise);
-            text-decoration: underline;
-        }
-        
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            margin-top: 20px;
-        }
-        
-        .motto {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.85rem;
-            color: var(--gold);
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-        }
-        
-        .copyright {
-            font-size: 0.8rem;
-            color: rgba(245, 241, 232, 0.5);
-        }
-        
-        .top-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+        /* Login Tabs */
+        .login-tabs {
             display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 15px;
-            padding: 15px 20px;
-            background: rgba(10, 22, 40, 0.9);
-            border-bottom: 1px solid rgba(59, 165, 181, 0.2);
-            z-index: 1000;
-        }
-        
-        .user-badge {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.75rem;
-            padding: 5px 12px;
-            border-radius: 20px;
-            background: rgba(59, 165, 181, 0.2);
-            color: var(--turquoise-light);
-        }
-        
-        .user-badge.admin-badge {
-            background: rgba(212, 168, 75, 0.2);
-            color: var(--gold);
-        }
-        
-        .logout-btn {
-            padding: 8px 16px;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.75rem;
-            background: transparent;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            overflow: hidden;
             border: 1px solid var(--turquoise);
-            color: var(--turquoise-light);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.2s;
         }
         
-        .logout-btn:hover {
+        .login-tab {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            color: var(--turquoise-light);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .login-tab.active {
             background: var(--turquoise);
             color: var(--white);
         }
         
-        #main-site .container {
-            margin-top: 60px;
+        /* Login Panels */
+        .login-panel {
+            display: none;
+            background: rgba(26, 58, 92, 0.5);
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid var(--turquoise);
         }
         
-        /* Responsive */
-        @media (max-width: 600px) {
-            header h1 {
-                font-size: 1.8rem;
-                letter-spacing: 1px;
-            }
-            
-            header .subtitle {
-                font-size: 0.75rem;
-                letter-spacing: 2px;
-            }
-            
-            .nav-grid, .admin-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            header {
-                padding: 40px 15px;
-            }
-            
-            .login-box {
-                padding: 40px 25px;
-            }
-            
-            .login-logo {
-                width: 120px;
-                height: 120px;
-            }
-            
-            .header-logo {
-                width: 120px;
-                height: 120px;
-            }
+        .login-panel.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            color: var(--turquoise-light);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--navy-light);
+            border-radius: 8px;
+            background: var(--navy-dark);
+            color: var(--cream);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--turquoise);
+        }
+        
+        .pin-input {
+            text-align: center;
+            font-size: 1.5rem;
+            letter-spacing: 10px;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), #c49a3d);
+            color: var(--navy-dark);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(212, 168, 75, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--turquoise);
+            color: var(--turquoise-light);
+        }
+        
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+        }
+        
+        .message.error {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid #dc3545;
+            color: #ff6b7a;
+        }
+        
+        .message.success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            color: #5fd97a;
+        }
+        
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 20px 0;
+            color: var(--turquoise-light);
+            font-size: 0.8rem;
+        }
+        
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--navy-light);
+        }
+        
+        .divider span {
+            padding: 0 15px;
+        }
+        
+        .register-link {
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+        
+        .register-link:hover {
+            text-decoration: underline;
+        }
+        
+        .help-text {
+            color: var(--turquoise-light);
+            font-size: 0.75rem;
+            margin-top: 5px;
         }
     </style>
 </head>
 <body>
-    <!-- LOGIN SCREEN -->
-    <div id="login-screen">
-        <div class="login-box">
-            <img src="ao357logo.jpg" alt="Alpha Omega Lodge No. 357" class="login-logo">
-            <h1>Members Portal</h1>
-            <p class="subtitle">Alpha Omega Lodge No. 357</p>
-            
-            <form id="login-form">
-                <label for="password">Enter Lodge Password</label>
-                <input type="password" id="password" placeholder="Password" autocomplete="off">
-                <button type="submit">Enter the Lodge</button>
-            </form>
-            
-            <p class="error-msg" id="error-msg">Incorrect password. Please try again.</p>
-            
-            <p class="login-footer">Contact the Secretary if you need access.</p>
-        </div>
-    </div>
-
-    <!-- MAIN SITE (hidden until correct password) -->
-    <div id="main-site">
-        <div class="top-bar">
-            <span class="user-badge" id="user-badge">Brother</span>
-            <button class="logout-btn" onclick="logout()">Log Out</button>
+    <div class="login-container">
+        <img src="ao357logo.jpg" alt="Alpha Omega Lodge No. 357" class="logo">
+        <h1>Alpha Omega Lodge No. 357</h1>
+        <p class="subtitle">PRINCE HALL AFFILIATED • F. & A.M.</p>
+        <p class="established">Miami, Florida • Chartered 1984</p>
+        
+        <div class="login-tabs">
+            <button class="login-tab active" onclick="showTab('member')">Brother</button>
+            <button class="login-tab" onclick="showTab('register')">Register</button>
+            <button class="login-tab" onclick="showTab('admin')">Officer</button>
         </div>
         
-        <div class="container">
-            <header>
-                <img src="ao357logo.jpg" alt="Alpha Omega Lodge No. 357" class="header-logo">
-                <h1>Alpha Omega Lodge No. 357</h1>
-                <p class="subtitle">Prince Hall Affiliated • F. & A.M.</p>
-                <p class="established">Miami, Florida • Chartered 1984</p>
-            </header>
+        <div id="message" class="message" style="display: none;"></div>
+        
+        <!-- MEMBER LOGIN -->
+        <div id="member-panel" class="login-panel active">
+            <div class="form-group">
+                <label>Select Your Name</label>
+                <select id="member-name">
+                    <option value="">Loading...</option>
+                </select>
+            </div>
             
-            <section class="welcome">
-                <h2>Welcome, Brother</h2>
-                <p>This members portal provides access to lodge communications, our calendar of events, and important announcements. Stay connected with your brethren.</p>
-            </section>
+            <div class="form-group">
+                <label>Enter Your PIN</label>
+                <input type="password" id="member-pin" class="pin-input" maxlength="4" inputmode="numeric" placeholder="••••">
+            </div>
             
-            <!-- MAIN NAV - Visible to all brothers -->
-            <nav class="nav-grid">
-                <a href="trestle-board.html" class="nav-card featured">
-                    <div class="icon">📰</div>
-                    <h3>The Trestle Board</h3>
-                    <p>Read the latest lodge newsletter featuring messages from the East, announcements, and community updates.</p>
-                </a>
+            <button class="btn btn-primary" onclick="memberLogin()">Enter Lodge</button>
+            
+            <div class="divider"><span>New member?</span></div>
+            
+            <p style="text-align: center;">
+                <a href="#" class="register-link" onclick="showTab('register')">Register with invite code</a>
+            </p>
+        </div>
+        
+        <!-- REGISTER -->
+        <div id="register-panel" class="login-panel">
+            <div class="form-group">
+                <label>Enter Your Invite Code</label>
+                <input type="text" id="invite-code" placeholder="AO357-XXXXXX" style="text-transform: uppercase;">
+                <p class="help-text">Get this code from the Secretary</p>
+            </div>
+            
+            <button class="btn btn-primary" onclick="verifyInviteCode()">Verify Code</button>
+            
+            <!-- Registration form (hidden until code verified) -->
+            <div id="registration-form" style="display: none;">
+                <div class="divider"><span>Complete Your Profile</span></div>
                 
-                <a href="ao357-calendar.html" class="nav-card featured">
-                    <div class="icon">📅</div>
-                    <h3>Lodge Calendar</h3>
-                    <p>View upcoming stated meetings, degree work, fundraisers, and special events. Subscribe to sync with your phone.</p>
-                </a>
+                <div class="form-group">
+                    <label>Your Name</label>
+                    <input type="text" id="reg-name" readonly style="background: var(--navy-light);">
+                </div>
                 
-                <a href="checkin.html" class="nav-card">
-                    <div class="icon">✓</div>
-                    <h3>Meeting Check-In</h3>
-                    <p>Mark your attendance at lodge meetings and update your member profile.</p>
-                </a>
-            </nav>
-            
-            <!-- SHARE & ADD TO HOME SCREEN -->
-            <section class="share-section">
-                <h2>📲 Add to Your Home Screen</h2>
-                <p class="share-subtitle">Access the portal like an app — no download required</p>
+                <div class="form-group">
+                    <label>Birthday (MM/DD)</label>
+                    <input type="text" id="reg-birthday" placeholder="MM/DD" maxlength="5">
+                </div>
                 
-                <div class="share-content">
-                    <div class="qr-box">
-                        <img src="ao357-qr-code.png" alt="QR Code" class="qr-image">
-                        <p class="qr-label">Scan to share with a brother</p>
-                    </div>
-                    
-                    <div class="instructions-box">
-                        <div class="device-instructions">
-                            <h3>🍎 iPhone</h3>
-                            <ol>
-                                <li>Tap the <strong>Share</strong> button ⬆️</li>
-                                <li>Tap <strong>"Add to Home Screen"</strong></li>
-                                <li>Tap <strong>Add</strong></li>
-                            </ol>
-                        </div>
-                        
-                        <div class="device-instructions">
-                            <h3>🤖 Android</h3>
-                            <ol>
-                                <li>Tap the <strong>3 dots</strong> menu ⋮</li>
-                                <li>Tap <strong>"Add to Home Screen"</strong></li>
-                                <li>Tap <strong>Add</strong></li>
-                            </ol>
-                        </div>
-                    </div>
+                <div class="form-group">
+                    <label>Email (optional)</label>
+                    <input type="email" id="reg-email" placeholder="your.email@example.com">
                 </div>
-            </section>
-            
-            <!-- ADMIN SECTION - Only visible to admins -->
-            <section class="admin-section" id="admin-section">
-                <p class="admin-header">🔐 Officer Tools</p>
-                <div class="admin-grid">
-                    <a href="checkin-qr.html" class="nav-card admin">
-                        <div class="icon">📱</div>
-                        <h3>Check-In QR Display</h3>
-                        <p>Display today's check-in QR code at the Tyler's door and view attendance.</p>
-                    </a>
-                    
-                    <a href="site-guide.html" class="nav-card admin">
-                        <div class="icon">📖</div>
-                        <h3>How to Update This Site</h3>
-                        <p>Step-by-step guide for updating the calendar, newsletter, officers, and passwords.</p>
-                    </a>
-                    
-                    <a href="google-calendar-setup-guide.html" class="nav-card admin">
-                        <div class="icon">⚙️</div>
-                        <h3>Calendar Setup Guide</h3>
-                        <p>Instructions for setting up and managing the Google Calendar system.</p>
-                    </a>
-                    
-                    <a href="one-page-handout.html" class="nav-card admin">
-                        <div class="icon">📋</div>
-                        <h3>Digital Initiative</h3>
-                        <p>Overview document for presenting the digital communications system.</p>
-                    </a>
-                    
-                    <a href="ao357-site-backup.zip" download class="nav-card admin">
-                        <div class="icon">💾</div>
-                        <h3>Download Site Files</h3>
-                        <p>Download all website files as a ZIP backup for editing or safekeeping.</p>
-                    </a>
+                
+                <div class="form-group">
+                    <label>Phone (optional)</label>
+                    <input type="tel" id="reg-phone" placeholder="(305) 555-1234">
                 </div>
-            </section>
-            
-            <section class="officers-section">
-                <h2>2025 Lodge Officers</h2>
-                <div class="officers-grid">
-                    <div class="officer">
-                        <p class="title">Worshipful Master</p>
-                        <p class="name">[Name]</p>
-                    </div>
-                    <div class="officer">
-                        <p class="title">Senior Warden</p>
-                        <p class="name">[Name]</p>
-                    </div>
-                    <div class="officer">
-                        <p class="title">Junior Warden</p>
-                        <p class="name">[Name]</p>
-                    </div>
-                    <div class="officer">
-                        <p class="title">Treasurer</p>
-                        <p class="name">[Name]</p>
-                    </div>
-                    <div class="officer">
-                        <p class="title">Secretary</p>
-                        <p class="name">[Name]</p>
-                    </div>
-                    <div class="officer">
-                        <p class="title">Chaplain</p>
-                        <p class="name">[Name]</p>
-                    </div>
-                    <div class="officer">
-                        <p class="title">Senior Deacon</p>
-                        <p class="name">[Name]</p>
-                    </div>
-                    <div class="officer">
-                        <p class="title">Junior Deacon</p>
-                        <p class="name">[Name]</p>
-                    </div>
-                    <div class="officer">
-                        <p class="title">Tiler</p>
-                        <p class="name">[Name]</p>
-                    </div>
+                
+                <div class="form-group">
+                    <label>Year Raised (optional)</label>
+                    <input type="text" id="reg-raised" placeholder="2015" maxlength="4">
                 </div>
-            </section>
-            
-            <section class="contact-section">
-                <h2>Contact the Lodge</h2>
-                <div class="contact-info">
-                    <p><strong>Stated Communications:</strong> 1st & 3rd Wednesday of each month</p>
-                    <p>Meeting at 7:00 PM</p>
-                    <p style="margin-top: 10px; font-size: 0.85rem; color: var(--gold-light);"><em>💡 Idea under consideration: Adding dinner at 6:00 PM before meetings</em></p>
-                    <p style="margin-top: 15px;"><strong>Secretary:</strong> <a href="mailto:ao357secretary@gmail.com">ao357secretary@gmail.com</a></p>
-                    <p><strong>Location:</strong> [Lodge Address], Miami, FL</p>
+                
+                <div class="form-group">
+                    <label>Create Your PIN (4 digits)</label>
+                    <input type="password" id="reg-pin" class="pin-input" maxlength="4" inputmode="numeric" placeholder="••••">
+                    <p class="help-text">You'll use this to log in</p>
                 </div>
-            </section>
+                
+                <div class="form-group">
+                    <label>Confirm PIN</label>
+                    <input type="password" id="reg-pin-confirm" class="pin-input" maxlength="4" inputmode="numeric" placeholder="••••">
+                </div>
+                
+                <button class="btn btn-primary" onclick="registerMember()">Complete Registration</button>
+            </div>
+        </div>
+        
+        <!-- ADMIN LOGIN -->
+        <div id="admin-panel" class="login-panel">
+            <div class="form-group">
+                <label>Officer PIN</label>
+                <input type="password" id="admin-pin" class="pin-input" maxlength="6" inputmode="numeric" placeholder="••••••">
+                <p class="help-text">Admin or Secretary PIN</p>
+            </div>
             
-            <footer>
-                <p class="motto">Integrity • Brotherly Love • Morality</p>
-                <p class="copyright">© 2025 Alpha Omega Lodge No. 357, P.H.A., F. & A.M.</p>
-            </footer>
+            <button class="btn btn-primary" onclick="adminLogin()">Officer Login</button>
         </div>
     </div>
-
+    
     <script>
-        // =============================================
-        // CHANGE THESE PASSWORDS
-        // =============================================
-        const BROTHER_PASSWORD = "AO357";      // For all brothers
-        const ADMIN_PASSWORD = "AO357Admin";   // For officers/admin
-        // =============================================
+        const API_URL = 'https://script.google.com/macros/s/AKfycbx427mzlIHjKzX_IHbaOEnZlBESWVnHCcWXO16cLF97C3VOjc9OhvfZGMEkRvpZeVr7/exec';
         
-        let isAdmin = false;
+        let verifiedInviteCode = '';
         
-        // Check if already logged in
-        const authStatus = sessionStorage.getItem('ao357_auth');
-        if (authStatus === 'brother' || authStatus === 'admin') {
-            isAdmin = (authStatus === 'admin');
-            showMainSite();
-        }
+        // Load member names on page load
+        document.addEventListener('DOMContentLoaded', loadMemberNames);
         
-        // Handle login form
-        document.getElementById('login-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const entered = document.getElementById('password').value;
-            
-            if (entered === ADMIN_PASSWORD) {
-                sessionStorage.setItem('ao357_auth', 'admin');
-                isAdmin = true;
-                showMainSite();
-            } else if (entered === BROTHER_PASSWORD) {
-                sessionStorage.setItem('ao357_auth', 'brother');
-                isAdmin = false;
-                showMainSite();
-            } else {
-                document.getElementById('error-msg').style.display = 'block';
-                document.getElementById('password').value = '';
-            }
-        });
-        
-        function showMainSite() {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('main-site').style.display = 'block';
-            
-            // Show admin section if admin
-            if (isAdmin) {
-                document.getElementById('admin-section').classList.add('visible');
-                document.getElementById('user-badge').textContent = 'Officer';
-                document.getElementById('user-badge').classList.add('admin-badge');
-            }
-        }
-        
-        function logout() {
-            sessionStorage.removeItem('ao357_auth');
-            sessionStorage.removeItem('ao357_lastActivity');
-            isAdmin = false;
-            document.getElementById('main-site').style.display = 'none';
-            document.getElementById('login-screen').style.display = 'flex';
-            document.getElementById('password').value = '';
-            document.getElementById('error-msg').style.display = 'none';
-            document.getElementById('admin-section').classList.remove('visible');
-            document.getElementById('user-badge').textContent = 'Brother';
-            document.getElementById('user-badge').classList.remove('admin-badge');
-        }
-        
-        // =============================================
-        // SESSION TIMEOUT - 30 MINUTES OF INACTIVITY
-        // =============================================
-        const TIMEOUT_MINUTES = 30;
-        const TIMEOUT_MS = TIMEOUT_MINUTES * 60 * 1000;
-        
-        // Update last activity timestamp
-        function updateActivity() {
-            sessionStorage.setItem('ao357_lastActivity', Date.now().toString());
-        }
-        
-        // Check if session has expired
-        function checkTimeout() {
-            const lastActivity = sessionStorage.getItem('ao357_lastActivity');
-            const authStatus = sessionStorage.getItem('ao357_auth');
-            
-            if (authStatus && lastActivity) {
-                const elapsed = Date.now() - parseInt(lastActivity);
-                if (elapsed > TIMEOUT_MS) {
-                    alert('Your session has expired due to inactivity. Please log in again.');
-                    logout();
+        async function loadMemberNames() {
+            try {
+                const response = await fetch(API_URL + '?action=getMemberNames');
+                const data = await response.json();
+                
+                const select = document.getElementById('member-name');
+                select.innerHTML = '<option value="">-- Select Your Name --</option>';
+                
+                if (data.success && data.names.length > 0) {
+                    data.names.forEach(name => {
+                        const option = document.createElement('option');
+                        option.value = name;
+                        option.textContent = name;
+                        select.appendChild(option);
+                    });
+                } else {
+                    select.innerHTML = '<option value="">No members registered yet</option>';
                 }
+            } catch (error) {
+                console.error('Error loading members:', error);
             }
         }
         
-        // Track user activity
-        ['click', 'keypress', 'scroll', 'mousemove', 'touchstart'].forEach(event => {
-            document.addEventListener(event, updateActivity, { passive: true });
+        function showTab(tab) {
+            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.login-panel').forEach(p => p.classList.remove('active'));
+            
+            const tabs = ['member', 'register', 'admin'];
+            const index = tabs.indexOf(tab);
+            document.querySelectorAll('.login-tab')[index].classList.add('active');
+            document.getElementById(tab + '-panel').classList.add('active');
+            
+            hideMessage();
+        }
+        
+        async function memberLogin() {
+            const name = document.getElementById('member-name').value;
+            const pin = document.getElementById('member-pin').value;
+            
+            if (!name) {
+                showMessage('Please select your name', 'error');
+                return;
+            }
+            
+            if (!pin || pin.length !== 4) {
+                showMessage('Please enter your 4-digit PIN', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'loginWithPin',
+                        name: name,
+                        pin: pin
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Store session
+                    sessionStorage.setItem('ao357_auth', 'brother');
+                    sessionStorage.setItem('ao357_memberId', data.memberId);
+                    sessionStorage.setItem('ao357_name', data.name);
+                    sessionStorage.setItem('ao357_lastActivity', Date.now().toString());
+                    
+                    // Redirect to portal
+                    window.location.href = 'portal.html';
+                } else {
+                    showMessage(data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Error connecting to server', 'error');
+            }
+        }
+        
+        async function verifyInviteCode() {
+            const code = document.getElementById('invite-code').value.trim().toUpperCase();
+            
+            if (!code) {
+                showMessage('Please enter your invite code', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(API_URL + '?action=verifyInviteCode&code=' + encodeURIComponent(code));
+                const data = await response.json();
+                
+                if (data.success) {
+                    verifiedInviteCode = code;
+                    document.getElementById('reg-name').value = data.brotherName;
+                    document.getElementById('registration-form').style.display = 'block';
+                    document.getElementById('invite-code').disabled = true;
+                    showMessage('Code verified! Complete your profile below.', 'success');
+                } else {
+                    showMessage(data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Error verifying code', 'error');
+            }
+        }
+        
+        async function registerMember() {
+            const birthday = document.getElementById('reg-birthday').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const yearRaised = document.getElementById('reg-raised').value.trim();
+            const pin = document.getElementById('reg-pin').value;
+            const pinConfirm = document.getElementById('reg-pin-confirm').value;
+            
+            // Validation
+            if (!birthday || !/^\d{2}\/\d{2}$/.test(birthday)) {
+                showMessage('Birthday must be in MM/DD format', 'error');
+                return;
+            }
+            
+            if (!pin || !/^\d{4}$/.test(pin)) {
+                showMessage('PIN must be exactly 4 digits', 'error');
+                return;
+            }
+            
+            if (pin !== pinConfirm) {
+                showMessage('PINs do not match', 'error');
+                return;
+            }
+            
+            if (yearRaised && !/^\d{4}$/.test(yearRaised)) {
+                showMessage('Year Raised must be a 4-digit year', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'registerMember',
+                        inviteCode: verifiedInviteCode,
+                        birthday: birthday,
+                        email: email,
+                        phone: phone,
+                        yearRaised: yearRaised,
+                        pin: pin
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showMessage(data.message, 'success');
+                    
+                    // Store session
+                    sessionStorage.setItem('ao357_auth', 'brother');
+                    sessionStorage.setItem('ao357_memberId', data.memberId);
+                    sessionStorage.setItem('ao357_name', data.name);
+                    sessionStorage.setItem('ao357_lastActivity', Date.now().toString());
+                    
+                    // Redirect after short delay
+                    setTimeout(() => {
+                        window.location.href = 'portal.html';
+                    }, 1500);
+                } else {
+                    showMessage(data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Error registering', 'error');
+            }
+        }
+        
+        async function adminLogin() {
+            const pin = document.getElementById('admin-pin').value;
+            
+            if (!pin) {
+                showMessage('Please enter the officer PIN', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'adminLogin',
+                        pin: pin
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    sessionStorage.setItem('ao357_auth', 'admin');
+                    sessionStorage.setItem('ao357_role', data.role);
+                    sessionStorage.setItem('ao357_adminPin', pin);
+                    sessionStorage.setItem('ao357_lastActivity', Date.now().toString());
+                    
+                    window.location.href = 'portal.html';
+                } else {
+                    showMessage(data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Error connecting to server', 'error');
+            }
+        }
+        
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = 'message ' + type;
+            msg.style.display = 'block';
+        }
+        
+        function hideMessage() {
+            document.getElementById('message').style.display = 'none';
+        }
+        
+        // Enter key support
+        document.getElementById('member-pin').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') memberLogin();
         });
         
-        // Check timeout every minute
-        setInterval(checkTimeout, 60000);
+        document.getElementById('admin-pin').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') adminLogin();
+        });
         
-        // Initialize activity timestamp on load
-        if (sessionStorage.getItem('ao357_auth')) {
-            updateActivity();
-            checkTimeout();
-        }
+        document.getElementById('invite-code').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') verifyInviteCode();
+        });
     </script>
 </body>
 </html>
