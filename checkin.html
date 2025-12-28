@@ -510,6 +510,11 @@
                 if (data.success) {
                     document.getElementById('checkin-form').style.display = 'none';
                     document.getElementById('checkin-success').style.display = 'block';
+                } else if (data.error === 'Already checked in today') {
+                    document.getElementById('checkin-form').style.display = 'none';
+                    document.getElementById('checkin-success').style.display = 'block';
+                    document.querySelector('#checkin-success h2').textContent = 'Already Checked In';
+                    document.querySelector('#checkin-success p').textContent = 'You already checked in today. See you at the meeting!';
                 } else {
                     showMessage(data.error, 'error');
                 }
@@ -587,12 +592,35 @@
             if (!currentMember) return;
             
             document.getElementById('profile-name').textContent = currentMember.name;
-            document.getElementById('profile-birthday').textContent = currentMember.birthday || '-';
+            document.getElementById('profile-birthday').textContent = formatBirthday(currentMember.birthday) || '-';
             document.getElementById('profile-email').textContent = currentMember.email || '-';
             document.getElementById('profile-phone').textContent = currentMember.phone || '-';
             
             document.getElementById('profile-view').style.display = 'block';
             document.getElementById('profile-form').style.display = 'none';
+        }
+        
+        function formatBirthday(bday) {
+            if (!bday) return '-';
+            
+            // If it's already in MM/DD format, return as is
+            if (/^\d{1,2}\/\d{1,2}$/.test(bday)) {
+                return bday;
+            }
+            
+            // If it's an ISO date string (like 2025-11-21T05:00:00.000Z)
+            if (bday.includes('T') || bday.includes('-')) {
+                try {
+                    const date = new Date(bday);
+                    const month = date.getMonth() + 1;
+                    const day = date.getDate();
+                    return month.toString().padStart(2, '0') + '/' + day.toString().padStart(2, '0');
+                } catch (e) {
+                    return bday;
+                }
+            }
+            
+            return bday;
         }
         
         function showEditForm() {
