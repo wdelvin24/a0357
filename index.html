@@ -246,14 +246,12 @@
         <!-- MEMBER LOGIN -->
         <div id="member-panel" class="login-panel active">
             <div class="form-group">
-                <label>Select Your Name</label>
-                <select id="member-name">
-                    <option value="">Loading...</option>
-                </select>
+                <label>Your Phone Number</label>
+                <input type="tel" id="member-phone" placeholder="(305) 555-1234">
             </div>
             
             <div class="form-group">
-                <label>Enter Your PIN</label>
+                <label>Your PIN</label>
                 <input type="password" id="member-pin" class="pin-input" maxlength="4" inputmode="numeric" placeholder="••••">
             </div>
             
@@ -296,8 +294,9 @@
                 </div>
                 
                 <div class="form-group">
-                    <label>Phone (optional)</label>
+                    <label>Phone * (required for login)</label>
                     <input type="tel" id="reg-phone" placeholder="(305) 555-1234">
+                    <p class="help-text">You'll use this + PIN to log in</p>
                 </div>
                 
                 <div class="form-group">
@@ -337,31 +336,14 @@
         
         let verifiedInviteCode = '';
         
-        // Load member names on page load
-        document.addEventListener('DOMContentLoaded', loadMemberNames);
+        // Enter key support
+        document.getElementById('member-phone').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') document.getElementById('member-pin').focus();
+        });
         
-        async function loadMemberNames() {
-            try {
-                const response = await fetch(API_URL + '?action=getMemberNames');
-                const data = await response.json();
-                
-                const select = document.getElementById('member-name');
-                select.innerHTML = '<option value="">-- Select Your Name --</option>';
-                
-                if (data.success && data.names.length > 0) {
-                    data.names.forEach(name => {
-                        const option = document.createElement('option');
-                        option.value = name;
-                        option.textContent = name;
-                        select.appendChild(option);
-                    });
-                } else {
-                    select.innerHTML = '<option value="">No members registered yet</option>';
-                }
-            } catch (error) {
-                console.error('Error loading members:', error);
-            }
-        }
+        document.getElementById('member-pin').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') memberLogin();
+        });
         
         function showTab(tab) {
             document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
@@ -376,11 +358,11 @@
         }
         
         async function memberLogin() {
-            const name = document.getElementById('member-name').value;
+            const phone = document.getElementById('member-phone').value.replace(/\D/g, ''); // Strip non-digits
             const pin = document.getElementById('member-pin').value;
             
-            if (!name) {
-                showMessage('Please select your name', 'error');
+            if (!phone || phone.length < 7) {
+                showMessage('Please enter your phone number', 'error');
                 return;
             }
             
@@ -394,7 +376,7 @@
                     method: 'POST',
                     body: JSON.stringify({
                         action: 'loginWithPin',
-                        name: name,
+                        phone: phone,
                         pin: pin
                     })
                 });
@@ -453,6 +435,11 @@
             const pinConfirm = document.getElementById('reg-pin-confirm').value;
             
             // Validation
+            if (!phone || phone.replace(/\D/g, '').length < 10) {
+                showMessage('Phone number is required (10 digits)', 'error');
+                return;
+            }
+            
             if (!birthday || !/^\d{2}\/\d{2}$/.test(birthday)) {
                 showMessage('Birthday must be in MM/DD format', 'error');
                 return;
@@ -554,11 +541,6 @@
         function hideMessage() {
             document.getElementById('message').style.display = 'none';
         }
-        
-        // Enter key support
-        document.getElementById('member-pin').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') memberLogin();
-        });
         
         document.getElementById('admin-pin').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') adminLogin();
