@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guest Check-In | Alpha Omega Lodge No. 357</title>
+    <link rel="apple-touch-icon" href="ao357logo.jpg">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy-dark: #0a1628;
+            --navy-primary: #1a3a5c;
+            --navy-light: #2a4a6c;
+            --turquoise: #3ba5b5;
+            --turquoise-light: #5ec4d4;
+            --gold: #d4a84b;
+            --cream: #f5f1e8;
+            --white: #ffffff;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-primary) 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        
+        .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 3px solid var(--gold);
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: var(--white);
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            color: var(--gold);
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: rgba(26, 58, 92, 0.6);
+            border-radius: 12px;
+            padding: 30px 25px;
+            border: 1px solid var(--turquoise);
+        }
+        
+        .card h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .welcome-text {
+            color: var(--turquoise-light);
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        
+        label {
+            display: block;
+            color: var(--turquoise-light);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid var(--navy-light);
+            border-radius: 8px;
+            background: var(--navy-dark);
+            color: var(--cream);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--turquoise);
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--gold), #c49a3d);
+            color: var(--navy-dark);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(212, 168, 75, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--turquoise);
+            color: var(--turquoise-light);
+            margin-top: 15px;
+        }
+        
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .message.error {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid #dc3545;
+            color: #ff6b7a;
+        }
+        
+        .message.success {
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            color: #5fd97a;
+        }
+        
+        /* Success screen */
+        .success-screen {
+            display: none;
+        }
+        
+        .success-screen.show {
+            display: block;
+        }
+        
+        .checkmark {
+            font-size: 4rem;
+            margin-bottom: 15px;
+        }
+        
+        .success-screen h2 {
+            color: #28a745;
+            font-family: 'Cinzel', serif;
+            margin-bottom: 10px;
+        }
+        
+        .success-screen p {
+            color: var(--turquoise-light);
+        }
+        
+        /* Member link */
+        .member-link {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--navy-light);
+        }
+        
+        .member-link p {
+            color: var(--turquoise-light);
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .member-link a {
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+        
+        .member-link a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Error state */
+        .error-screen {
+            display: none;
+        }
+        
+        .error-screen.show {
+            display: block;
+        }
+        
+        .error-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="ao357logo.jpg" alt="Alpha Omega Lodge No. 357" class="logo">
+        <h1>Alpha Omega Lodge No. 357</h1>
+        <p class="subtitle">PRINCE HALL AFFILIATED • F. & A.M.</p>
+        
+        <div class="card">
+            <!-- Check-in Form -->
+            <div id="checkin-form">
+                <h2>Welcome, Visitor!</h2>
+                <p class="welcome-text">Please sign in to record your attendance at tonight's meeting.</p>
+                
+                <div id="message" class="message" style="display: none;"></div>
+                
+                <div class="form-group">
+                    <label>Your Full Name</label>
+                    <input type="text" id="guest-name" placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label>Your Lodge (optional)</label>
+                    <input type="text" id="guest-lodge" placeholder="Lodge name & number">
+                </div>
+                
+                <button class="btn btn-primary" onclick="checkIn()">✓ Check In</button>
+                
+                <div class="member-link">
+                    <p>Are you a member of Alpha Omega Lodge No. 357?</p>
+                    <a href="index.html">Member Login →</a>
+                </div>
+            </div>
+            
+            <!-- Success Screen -->
+            <div id="success-screen" class="success-screen">
+                <div class="checkmark">✅</div>
+                <h2>Welcome!</h2>
+                <p>Your attendance has been recorded.</p>
+                <p style="margin-top: 15px; color: var(--gold);">Enjoy the meeting, Brother.</p>
+            </div>
+            
+            <!-- Error Screen (no code) -->
+            <div id="error-screen" class="error-screen">
+                <div class="error-icon">⚠️</div>
+                <h2 style="color: var(--gold);">Check-In Unavailable</h2>
+                <p class="welcome-text">Please scan the QR code at the lodge entrance to check in.</p>
+                <button class="btn btn-secondary" onclick="window.location.href='index.html'">Go to Member Login</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbx427mzlIHjKzX_IHbaOEnZlBESWVnHCcWXO16cLF97C3VOjc9OhvfZGMEkRvpZeVr7/exec';
+        
+        // Get code from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventCode = urlParams.get('code');
+        
+        // If no code in URL, show error
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!eventCode) {
+                document.getElementById('checkin-form').style.display = 'none';
+                document.getElementById('error-screen').classList.add('show');
+            }
+        });
+        
+        async function checkIn() {
+            const name = document.getElementById('guest-name').value.trim();
+            const lodge = document.getElementById('guest-lodge').value.trim();
+            
+            if (!name) {
+                showMessage('Please enter your name', 'error');
+                return;
+            }
+            
+            // Format guest name with lodge if provided
+            const guestName = lodge ? `${name} (${lodge})` : `${name} (Guest)`;
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'checkIn',
+                        name: guestName,
+                        eventCode: eventCode,
+                        isGuest: true
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('checkin-form').style.display = 'none';
+                    document.getElementById('success-screen').classList.add('show');
+                } else {
+                    showMessage(data.error, 'error');
+                }
+            } catch (error) {
+                showMessage('Error checking in. Please try again.', 'error');
+            }
+        }
+        
+        function showMessage(text, type) {
+            const msg = document.getElementById('message');
+            msg.textContent = text;
+            msg.className = 'message ' + type;
+            msg.style.display = 'block';
+        }
+        
+        // Enter key support
+        document.getElementById('guest-name').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                document.getElementById('guest-lodge').focus();
+            }
+        });
+        
+        document.getElementById('guest-lodge').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkIn();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -412,15 +412,15 @@
             <div id="qrcode-fullscreen"></div>
         </div>
         <div class="code-display">
-            <p>Enter this code after scanning:</p>
+            <p>Scan to Check In</p>
             <div class="code" id="todayCode-fullscreen"></div>
         </div>
-        <p class="instructions">Scan with your phone camera to check in</p>
+        <p class="instructions">Point your phone camera at the QR code</p>
     </div>
     
     <script>
         const API_URL = 'https://script.google.com/macros/s/AKfycbx427mzlIHjKzX_IHbaOEnZlBESWVnHCcWXO16cLF97C3VOjc9OhvfZGMEkRvpZeVr7/exec';
-        const SITE_URL = 'https://wdelvin24.github.io/a0357/checkin.html';
+        const SITE_BASE = 'https://wdelvin24.github.io/a0357/';
         
         // Generate today's code
         function generateTodayCode() {
@@ -429,6 +429,11 @@
             const day = String(today.getDate()).padStart(2, '0');
             const year = String(today.getFullYear()).slice(-2);
             return 'AO357-' + month + day + year;
+        }
+        
+        // Generate QR URL with code embedded
+        function getQRUrl() {
+            return SITE_BASE + 'guest-checkin.html?code=' + generateTodayCode();
         }
         
         // Format today's date
@@ -440,15 +445,16 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             const todayCode = generateTodayCode();
+            const qrUrl = getQRUrl();
             
             // Display date and code
             document.getElementById('currentDate').textContent = formatDate();
             document.getElementById('todayCode').textContent = todayCode;
             document.getElementById('todayCode-fullscreen').textContent = todayCode;
             
-            // Generate QR codes
+            // Generate QR codes - now with embedded code in URL
             new QRCode(document.getElementById('qrcode'), {
-                text: SITE_URL,
+                text: qrUrl,
                 width: 200,
                 height: 200,
                 colorDark: '#1a3a5c',
@@ -457,7 +463,7 @@
             });
             
             new QRCode(document.getElementById('qrcode-fullscreen'), {
-                text: SITE_URL,
+                text: qrUrl,
                 width: 300,
                 height: 300,
                 colorDark: '#1a3a5c',
