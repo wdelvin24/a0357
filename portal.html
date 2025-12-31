@@ -342,7 +342,13 @@
             <a href="checkin.html" class="nav-card">
                 <div class="icon">✓</div>
                 <h3>Meeting Check-In</h3>
-                <p>Mark your attendance at lodge meetings and view your profile.</p>
+                <p>Mark your attendance at lodge meetings.</p>
+            </a>
+            
+            <a href="#" onclick="openProfileEditor(); return false;" class="nav-card">
+                <div class="icon">👤</div>
+                <h3>Edit My Profile</h3>
+                <p>Update your contact info, birthday, and personal details.</p>
             </a>
         </nav>
         
@@ -357,12 +363,6 @@
         <section class="admin-section" id="adminSection" style="display: none;">
             <p class="admin-header">🔐 Officer Tools</p>
             <div class="admin-grid">
-                <a href="#" onclick="openProfileEditor(); return false;" class="admin-card">
-                    <div class="icon">✏️</div>
-                    <h3>Edit My Profile</h3>
-                    <p>Update your officer information</p>
-                </a>
-                
                 <a href="admin-members.html" class="admin-card">
                     <div class="icon">👥</div>
                     <h3>Manage Members</h3>
@@ -389,23 +389,23 @@
             </div>
         </section>
         
-        <!-- Officer Profile Editor Modal -->
+        <!-- Profile Editor Modal (for all members) -->
         <div id="profileModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
             <div style="background: var(--navy-dark); border: 2px solid var(--gold); border-radius: 15px; padding: 30px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h3 style="font-family: 'Cinzel', serif; color: var(--gold); margin: 0;">Edit Officer Profile</h3>
+                    <h3 style="font-family: 'Cinzel', serif; color: var(--gold); margin: 0;">Edit My Profile</h3>
                     <button onclick="closeProfileEditor()" style="background: none; border: none; color: var(--cream); font-size: 1.5rem; cursor: pointer;">&times;</button>
                 </div>
                 
                 <div id="profileForm">
                     <div style="margin-bottom: 15px;">
-                        <label style="display: block; color: var(--turquoise-light); margin-bottom: 5px; font-size: 0.85rem;">Position</label>
-                        <input type="text" id="profilePosition" readonly style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--navy-light); background: var(--navy-primary); color: var(--cream); font-size: 1rem;">
+                        <label style="display: block; color: var(--turquoise-light); margin-bottom: 5px; font-size: 0.85rem;">Name</label>
+                        <input type="text" id="profileName" readonly style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--navy-light); background: var(--navy-primary); color: var(--cream); font-size: 1rem; opacity: 0.7;">
                     </div>
                     
                     <div style="margin-bottom: 15px;">
-                        <label style="display: block; color: var(--turquoise-light); margin-bottom: 5px; font-size: 0.85rem;">Name</label>
-                        <input type="text" id="profileName" placeholder="Your full name" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--navy-light); background: var(--navy-primary); color: var(--cream); font-size: 1rem;">
+                        <label style="display: block; color: var(--turquoise-light); margin-bottom: 5px; font-size: 0.85rem;">Birthday (MM/DD)</label>
+                        <input type="text" id="profileBirthday" placeholder="11/21" maxlength="5" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--navy-light); background: var(--navy-primary); color: var(--cream); font-size: 1rem;">
                     </div>
                     
                     <div style="margin-bottom: 15px;">
@@ -413,9 +413,14 @@
                         <input type="email" id="profileEmail" placeholder="your.email@example.com" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--navy-light); background: var(--navy-primary); color: var(--cream); font-size: 1rem;">
                     </div>
                     
-                    <div style="margin-bottom: 20px;">
+                    <div style="margin-bottom: 15px;">
                         <label style="display: block; color: var(--turquoise-light); margin-bottom: 5px; font-size: 0.85rem;">Phone</label>
                         <input type="tel" id="profilePhone" placeholder="(305) 555-1234" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--navy-light); background: var(--navy-primary); color: var(--cream); font-size: 1rem;">
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; color: var(--turquoise-light); margin-bottom: 5px; font-size: 0.85rem;">Year Raised</label>
+                        <input type="text" id="profileYearRaised" placeholder="2015" maxlength="4" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--navy-light); background: var(--navy-primary); color: var(--cream); font-size: 1rem;">
                     </div>
                     
                     <div id="profileMessage" style="display: none; padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center;"></div>
@@ -468,26 +473,36 @@
             const modal = document.getElementById('profileModal');
             modal.style.display = 'flex';
             
-            // Set position based on role
-            const title = officerTitles[userRole] || userRole;
-            document.getElementById('profilePosition').value = title;
+            const memberId = sessionStorage.getItem('ao357_memberId');
             
-            // Load current profile data
+            // Load current profile data from Members
             try {
-                const response = await fetch(API_URL + '?action=getOfficers');
+                const response = await fetch(API_URL + '?action=getMembers');
                 const data = await response.json();
                 
                 if (data.success) {
-                    const myProfile = data.officers.find(o => o.position === title);
+                    const myProfile = data.members.find(m => m.memberId === memberId);
                     if (myProfile) {
-                        document.getElementById('profileName').value = myProfile.name === '[Name]' ? '' : myProfile.name;
+                        document.getElementById('profileName').value = myProfile.name || '';
+                        document.getElementById('profileBirthday').value = formatBirthday(myProfile.birthday) || '';
                         document.getElementById('profileEmail').value = myProfile.email || '';
                         document.getElementById('profilePhone').value = myProfile.phone || '';
+                        document.getElementById('profileYearRaised').value = myProfile.yearRaised || '';
                     }
                 }
             } catch (error) {
                 console.error('Error loading profile:', error);
             }
+        }
+        
+        function formatBirthday(bday) {
+            if (!bday) return '';
+            const str = bday.toString();
+            if (str.includes(' ')) {
+                const date = new Date(str);
+                return (date.getMonth() + 1) + '/' + date.getDate();
+            }
+            return str;
         }
         
         function closeProfileEditor() {
@@ -496,26 +511,22 @@
         }
         
         async function saveProfile() {
-            const title = officerTitles[userRole] || userRole;
-            const name = document.getElementById('profileName').value.trim();
+            const memberId = sessionStorage.getItem('ao357_memberId');
+            const birthday = document.getElementById('profileBirthday').value.trim();
             const email = document.getElementById('profileEmail').value.trim();
             const phone = document.getElementById('profilePhone').value.trim();
-            
-            if (!name) {
-                showProfileMessage('Please enter your name', 'error');
-                return;
-            }
+            const yearRaised = document.getElementById('profileYearRaised').value.trim();
             
             try {
                 const response = await fetch(API_URL, {
                     method: 'POST',
                     body: JSON.stringify({
-                        action: 'updateOfficer',
-                        position: title,
-                        name: name,
+                        action: 'updateMember',
+                        memberId: memberId,
+                        birthday: birthday,
                         email: email,
                         phone: phone,
-                        adminPin: sessionStorage.getItem('ao357_adminPin')
+                        yearRaised: yearRaised
                     })
                 });
                 
