@@ -394,6 +394,15 @@
         const userName = sessionStorage.getItem('ao357_name');
         const userRole = sessionStorage.getItem('ao357_role');
         
+        // Officer title mapping
+        const officerTitles = {
+            'WM': 'Worshipful Master',
+            'SW': 'Senior Warden',
+            'JW': 'Junior Warden',
+            'SEC': 'Secretary',
+            'TREAS': 'Treasurer'
+        };
+        
         // Update UI based on user
         document.addEventListener('DOMContentLoaded', function() {
             if (userName) {
@@ -402,7 +411,8 @@
             }
             
             if (auth === 'admin') {
-                document.getElementById('userBadge').textContent = userRole === 'secretary' ? 'Secretary' : 'Admin';
+                const title = officerTitles[userRole] || userRole;
+                document.getElementById('userBadge').textContent = title;
                 document.getElementById('userBadge').classList.add('admin');
                 document.getElementById('adminSection').style.display = 'block';
             }
