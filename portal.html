@@ -405,16 +405,15 @@
         
         // Update UI based on user
         document.addEventListener('DOMContentLoaded', function() {
-            if (userName) {
-                document.getElementById('userName').textContent = userName;
-                document.getElementById('welcomeMessage').textContent = 'Welcome, Bro. ' + userName.split(' ')[0];
-            }
-            
-            if (auth === 'admin') {
+            if (auth === 'admin' && userRole) {
                 const title = officerTitles[userRole] || userRole;
                 document.getElementById('userBadge').textContent = title;
                 document.getElementById('userBadge').classList.add('admin');
+                document.getElementById('welcomeMessage').textContent = 'Welcome, ' + title;
                 document.getElementById('adminSection').style.display = 'block';
+            } else if (userName) {
+                document.getElementById('userName').textContent = userName;
+                document.getElementById('welcomeMessage').textContent = 'Welcome, Bro. ' + userName.split(' ')[0];
             }
         });
         
