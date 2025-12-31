@@ -858,8 +858,24 @@
                                               'July', 'August', 'September', 'October', 'November', 'December'];
                             const currentMonth = monthNames[new Date().getMonth()];
                             
-                            let html = '<p><strong>' + currentMonth + ':</strong> ';
-                            html += data.birthdays.map(b => b.name + ' (' + b.birthday + ')').join(', ');
+                            // Format birthday to just show the day
+                            function formatBday(bday) {
+                                if (!bday) return '';
+                                const str = bday.toString();
+                                // If it's a date string, extract just the day
+                                if (str.includes(' ')) {
+                                    const date = new Date(str);
+                                    return date.getDate();
+                                }
+                                // If MM/DD format, get the day part
+                                if (str.includes('/')) {
+                                    return parseInt(str.split('/')[1]);
+                                }
+                                return str;
+                            }
+                            
+                            let html = '<p><strong>' + currentMonth + ' Birthdays:</strong> ';
+                            html += data.birthdays.map(b => b.name + ' (' + currentMonth + ' ' + formatBday(b.birthday) + ')').join(', ');
                             html += '</p>';
                             container.innerHTML = html;
                         } else {
