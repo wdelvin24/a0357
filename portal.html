@@ -357,6 +357,12 @@
         <section class="admin-section" id="adminSection" style="display: none;">
             <p class="admin-header">🔐 Officer Tools</p>
             <div class="admin-grid">
+                <a href="#" onclick="openProfileEditor(); return false;" class="admin-card">
+                    <div class="icon">✏️</div>
+                    <h3>Edit My Profile</h3>
+                    <p>Update your officer information</p>
+                </a>
+                
                 <a href="admin-members.html" class="admin-card">
                     <div class="icon">👥</div>
                     <h3>Manage Members</h3>
@@ -383,12 +389,52 @@
             </div>
         </section>
         
+        <!-- Officer Profile Editor Modal -->
+        <div id="profileModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
+            <div style="background: var(--navy-dark); border: 2px solid var(--gold); border-radius: 15px; padding: 30px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="font-family: 'Cinzel', serif; color: var(--gold); margin: 0;">Edit Officer Profile</h3>
+                    <button onclick="closeProfileEditor()" style="background: none; border: none; color: var(--cream); font-size: 1.5rem; cursor: pointer;">&times;</button>
+                </div>
+                
+                <div id="profileForm">
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; color: var(--turquoise-light); margin-bottom: 5px; font-size: 0.85rem;">Position</label>
+                        <input type="text" id="profilePosition" readonly style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--navy-light); background: var(--navy-primary); color: var(--cream); font-size: 1rem;">
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; color: var(--turquoise-light); margin-bottom: 5px; font-size: 0.85rem;">Name</label>
+                        <input type="text" id="profileName" placeholder="Your full name" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--navy-light); background: var(--navy-primary); color: var(--cream); font-size: 1rem;">
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; color: var(--turquoise-light); margin-bottom: 5px; font-size: 0.85rem;">Email</label>
+                        <input type="email" id="profileEmail" placeholder="your.email@example.com" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--navy-light); background: var(--navy-primary); color: var(--cream); font-size: 1rem;">
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; color: var(--turquoise-light); margin-bottom: 5px; font-size: 0.85rem;">Phone</label>
+                        <input type="tel" id="profilePhone" placeholder="(305) 555-1234" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--navy-light); background: var(--navy-primary); color: var(--cream); font-size: 1rem;">
+                    </div>
+                    
+                    <div id="profileMessage" style="display: none; padding: 10px; border-radius: 8px; margin-bottom: 15px; text-align: center;"></div>
+                    
+                    <button onclick="saveProfile()" style="width: 100%; padding: 15px; background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--navy-dark); border: none; border-radius: 8px; font-family: 'Cinzel', serif; font-size: 1rem; font-weight: 600; cursor: pointer;">
+                        Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+        
         <footer>
             <p>© 2025 Alpha Omega Lodge No. 357, P.H.A., F. & A.M.</p>
         </footer>
     </div>
     
     <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbx427mzlIHjKzX_IHbaOEnZlBESWVnHCcWXO16cLF97C3VOjc9OhvfZGMEkRvpZeVr7/exec';
+        
         // Get user info from session
         const auth = sessionStorage.getItem('ao357_auth');
         const userName = sessionStorage.getItem('ao357_name');
@@ -416,6 +462,83 @@
                 document.getElementById('welcomeMessage').textContent = 'Welcome, Bro. ' + userName.split(' ')[0];
             }
         });
+        
+        // Profile Editor Functions
+        async function openProfileEditor() {
+            const modal = document.getElementById('profileModal');
+            modal.style.display = 'flex';
+            
+            // Set position based on role
+            const title = officerTitles[userRole] || userRole;
+            document.getElementById('profilePosition').value = title;
+            
+            // Load current profile data
+            try {
+                const response = await fetch(API_URL + '?action=getOfficers');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const myProfile = data.officers.find(o => o.position === title);
+                    if (myProfile) {
+                        document.getElementById('profileName').value = myProfile.name === '[Name]' ? '' : myProfile.name;
+                        document.getElementById('profileEmail').value = myProfile.email || '';
+                        document.getElementById('profilePhone').value = myProfile.phone || '';
+                    }
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+        
+        function closeProfileEditor() {
+            document.getElementById('profileModal').style.display = 'none';
+            document.getElementById('profileMessage').style.display = 'none';
+        }
+        
+        async function saveProfile() {
+            const title = officerTitles[userRole] || userRole;
+            const name = document.getElementById('profileName').value.trim();
+            const email = document.getElementById('profileEmail').value.trim();
+            const phone = document.getElementById('profilePhone').value.trim();
+            
+            if (!name) {
+                showProfileMessage('Please enter your name', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        action: 'updateOfficer',
+                        position: title,
+                        name: name,
+                        email: email,
+                        phone: phone,
+                        adminPin: sessionStorage.getItem('ao357_adminPin')
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    showProfileMessage('Profile updated!', 'success');
+                    setTimeout(closeProfileEditor, 1500);
+                } else {
+                    showProfileMessage(data.error || 'Update failed', 'error');
+                }
+            } catch (error) {
+                showProfileMessage('Error saving profile', 'error');
+            }
+        }
+        
+        function showProfileMessage(text, type) {
+            const msg = document.getElementById('profileMessage');
+            msg.textContent = text;
+            msg.style.display = 'block';
+            msg.style.background = type === 'error' ? 'rgba(220, 53, 69, 0.2)' : 'rgba(40, 167, 69, 0.2)';
+            msg.style.color = type === 'error' ? '#ff6b6b' : '#51cf66';
+        }
         
         function logout() {
             sessionStorage.clear();
